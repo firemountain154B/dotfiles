@@ -2,7 +2,7 @@
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/tony/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -103,22 +103,19 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias "rm"="trash"
-alias "timeout"="gtimeout"
-#alias "brew install"="brew update && brew install"
 
-export GRADLE_HOME=/Users/tony/Library/gradle-6.6/bin
-export PATH=$PATH:$GRADLE_HOME
-export PATH=/Users/tony/Library/kotlin-native-macos-1.4.20/bin:$PATH
-export PATH=$HOME/.cargo/bin:$PATH
+# on my mac
+if [ $(uname) = "Darwin" ]; then
+  alias "rm"="trash"
+  alias "timeout"="gtimeout"
+  #alias "brew install"="brew update && brew install"
 
-source ~/.custrc/.condarc
-if [[ $(uname -m) == 'x86_64' ]]; then
-    init_conda_intel
-else
-    init_conda_arm
+  export GRADLE_HOME=/Users/tony/Library/gradle-6.6/bin
+  export PATH=$PATH:$GRADLE_HOME
+  export PATH=/Users/tony/Library/kotlin-native-macos-1.4.20/bin:$PATH
+  export PATH=$HOME/.cargo/bin:$PATH
+
+  export PATH="/Users/tony/Library/Python/3.10/bin:$PATH"
+
+  [ -f "/Users/tony/.ghcup/env" ] && source "/Users/tony/.ghcup/env" # ghcup-env
 fi
-
-export PATH="/Users/tony/Library/Python/3.10/bin:$PATH"
-
-[ -f "/Users/tony/.ghcup/env" ] && source "/Users/tony/.ghcup/env" # ghcup-env
