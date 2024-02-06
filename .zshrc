@@ -122,3 +122,6 @@ if [ $(uname) = "Darwin" ]; then
 fi
 
 PROMPT='%(?..%F{red}?%? )%F{green}%* %{$fg_bold[blue]%}%1~%{$reset_color%} $(git_prompt_info)'
+
+check_update "$HOME/bin" &
+check_update "$HOME/dotfiles" &
