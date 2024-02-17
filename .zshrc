@@ -123,5 +123,14 @@ fi
 
 PROMPT='%(?..%F{red}?%? )%F{green}%* %{$fg_bold[blue]%}%1~%{$reset_color%} $(git_prompt_info)'
 
-check_update "$HOME/bin" &
-check_update "$HOME/dotfiles" &
+CHECK_OUTPUT="$HOME/check_update_output.txt"
+
+if [ -s $CHECK_OUTPUT ]; then
+    cat $CHECK_OUTPUT
+    echo '' >  $CHECK_OUTPUT
+fi
+
+tmux new-session -d -s repo_check_session1 "check_update '$HOME/bin' >> '$CHECK_OUTPUT' 2>&1"
+tmux new-session -d -s repo_check_session2 "check_update '$HOME/dotfiles' >> '$CHECK_OUTPUT' 2>&1"
+
+
