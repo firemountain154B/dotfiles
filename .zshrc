@@ -28,7 +28,7 @@ ZSH_THEME="robbyrussell"
 # DISABLE_AUTO_UPDATE="true"
 
 # Uncomment the following line to automatically update without prompting.
-# DISABLE_UPDATE_PROMPT="true"
+DISABLE_UPDATE_PROMPT="true"
 
 # Uncomment the following line to change how often to auto-update (in days).
 # export UPDATE_ZSH_DAYS=13
@@ -43,7 +43,7 @@ ZSH_THEME="robbyrussell"
 # DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
+ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
 # COMPLETION_WAITING_DOTS="true"
@@ -73,8 +73,8 @@ plugins=(
   git 
   zsh-syntax-highlighting 
   zsh-autosuggestions 
-  common-aliases
 )
+# common-aliases
 #zsh-autosuggestions 
 
 source $ZSH/oh-my-zsh.sh
@@ -117,20 +117,33 @@ if [ $(uname) = "Darwin" ]; then
   export PATH=$HOME/.cargo/bin:$PATH
 
   export PATH="/Users/tony/Library/Python/3.10/bin:$PATH"
-
-  [ -f "/Users/tony/.ghcup/env" ] && source "/Users/tony/.ghcup/env" # ghcup-env
+  export PYENCHANT_LIBRARY_PATH=/opt/homebrew/lib/libenchant-2.2.dylib
 fi
 
 PROMPT='%(?..%F{red}?%? )%F{green}%* %{$fg_bold[blue]%}%1~%{$reset_color%} $(git_prompt_info)'
 
-CHECK_OUTPUT="$HOME/check_update_output.txt"
+CHECK_OUTPUT="$HOME/.check_update_output.txt"
 
 if [ -s $CHECK_OUTPUT ]; then
     cat $CHECK_OUTPUT
     echo '' >  $CHECK_OUTPUT
 fi
 
-tmux new-session -d -s repo_check_session1 "check_update '$HOME/bin' >> '$CHECK_OUTPUT' 2>&1"
-tmux new-session -d -s repo_check_session2 "check_update '$HOME/dotfiles' >> '$CHECK_OUTPUT' 2>&1"
+check_update "$HOME/bin" --bg "$CHECK_OUTPUT"
+check_update "$HOME/dotfiles" --bg "$CHECK_OUTPUT"
 
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/Users/tony/miniconda3-arm/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/Users/tony/miniconda3-arm/etc/profile.d/conda.sh" ]; then
+        . "/Users/tony/miniconda3-arm/etc/profile.d/conda.sh"
+    else
+        export PATH="/Users/tony/miniconda3-arm/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
 
