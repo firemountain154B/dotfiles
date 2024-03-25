@@ -13,5 +13,5 @@ check_update "$HOME/bin" --bg "$CHECK_OUTPUT"
 check_update "$HOME/dotfiles" --bg "$CHECK_OUTPUT"
 background "sync_dotfiles d" /dev/null
 
-source ""$HOME/.common_aliases.sh"
+source .common_aliases.sh
 
