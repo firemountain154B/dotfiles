@@ -2,21 +2,6 @@
 
 current_shell=$(ps -p $$ -ocomm=)
 
-# Function to check if the terminal supports color
-check_color_support() {
-    # Check if stdout is a terminal
-    if [ -t 1 ]; then
-        # Check for color support
-        ncolors=$(tput colors)
-        if [ -n "$ncolors" ] && [ $ncolors -ge 8 ]; then
-          exit 0
-        else
-          exit 1
-        fi
-    else
-      exit 1
-    fi
-}
 
 # Define aliases based on color support
 ncolors=$(tput colors)
@@ -32,15 +17,8 @@ alias git='git -c color.ui=auto'
 # Colorized JSON output (requires jq)
 alias json='jq .'
 
-if [ "$current_shell" = "-zsh" ]; then
-  # Zsh specific color options
-  alias ls='ls -G'
-  alias dir='dir -G'
-else
-  # Bash specific color options
-  alias ls='ls --color=auto'
-  alias dir='dir --color=auto'
-fi
+alias ls='ls --color=auto'
+alias dir='dir --color=auto'
 
 # Syntax highlighting for various file types using bat (if installed)
 if command -v bat >/dev/null 2>&1; then
@@ -97,6 +75,8 @@ check_update "$HOME/bin" --bg "$CHECK_OUTPUT"
 check_update "$HOME/dotfiles" --bg "$CHECK_OUTPUT"
 background "sync_dotfiles d" /dev/null
 
+##################################################
+# bash specific
 if [ $current_shell = "bash" ] ; then
   git_branch() {
     branch=$(git branch 2>/dev/null | grep '*' | sed 's/* //')
@@ -106,6 +86,20 @@ if [ $current_shell = "bash" ] ; then
   }
 
   PS1='$(if [ $? -ne 0 ]; then echo -e "\[\033[31m\]? "; fi)\[\033[32m\]\t \[\033[1;34m\]\W\[\033[0m\]$(git_branch)\$ '
+fi
+
+##################################################
+# mac specific
+if [ $(uname) = "Darwin" ] ; then
+  export CLICOLOR=1
+  export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
+fi
+
+
+##################################################
+# bash specific
+if [ $current_shell = "bash" ] ; then
+PROMPT='%(?..%F{red}?%? )%F{green}%* %{$fg_bold[blue]%}%1~%{$reset_color%} $(git_prompt_info)'
 fi
 
 
