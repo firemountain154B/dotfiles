@@ -32,7 +32,7 @@ alias git='git -c color.ui=auto'
 # Colorized JSON output (requires jq)
 alias json='jq .'
 
-if [ "$current_shell" = "zsh" ]; then
+if [ "$current_shell" = "-zsh" ]; then
   # Zsh specific color options
   alias ls='ls -G'
   alias dir='dir -G'
