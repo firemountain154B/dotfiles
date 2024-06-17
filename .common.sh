@@ -9,18 +9,19 @@ check_color_support() {
         # Check for color support
         ncolors=$(tput colors)
         if [ -n "$ncolors" ] && [ $ncolors -ge 8 ]; then
-            echo "yes"
+          exit 0
         else
-            echo "no"
+          exit 1
         fi
     else
-        echo "no"
+      exit 1
     fi
 }
 
 # Define aliases based on color support
-if [ "$(check_color_support)" = "yes" ]; then
+if [ "$(check_color_support)" ]; then
     # Common aliases for both Bash and Zsh
+    echo "here"
     alias grep='grep --color=auto'
     alias diff='diff --color=auto'
     alias ip='ip -color=auto'
