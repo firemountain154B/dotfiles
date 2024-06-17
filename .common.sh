@@ -85,7 +85,7 @@ if [ $current_shell = "bash" ] ; then
     fi
   }
 
-  PS1='$(if [ $? -ne 0 ]; then echo -e "\[\033[31m\]? "; fi)\[\033[32m\]\t \[\033[1;34m\]\W\[\033[0m\]$(git_branch)\$ '
+  PS1='$(if [ $? -ne 0 ]; then echo -e "\[\033[31m\]? "; fi)\[\033[32m\]\h \[\033[1;34m\]\W\[\033[0m\]$(git_branch) '
 fi
 
 ##################################################
@@ -99,7 +99,7 @@ fi
 ##################################################
 # bash specific
 if [ $current_shell = "-zsh" ] ; then
-PROMPT='%(?..%F{red}?%? )%F{green}%* %{$fg_bold[blue]%}%1~%{$reset_color%} $(git_prompt_info)'
+PROMPT='%(?..%F{red}?%? )%F{green}%m %{$fg_bold[blue]%}%1~%{$reset_color%} $(git_prompt_info)'
 fi
 
 
