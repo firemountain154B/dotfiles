@@ -19,34 +19,35 @@ check_color_support() {
 }
 
 # Define aliases based on color support
-if [ "$(check_color_support)" ]; then
-    # Common aliases for both Bash and Zsh
-    echo "here"
-    alias grep='grep --color=auto'
-    alias diff='diff --color=auto'
-    alias ip='ip -color=auto'
+ncolors=$(tput colors)
+if [ -n "$ncolors" ] && [ $ncolors -ge 8 ]; then
+# Common aliases for both Bash and Zsh
+echo "here"
+alias grep='grep --color=auto'
+alias diff='diff --color=auto'
+alias ip='ip -color=auto'
 
-    # Git with color output
-    alias git='git -c color.ui=auto'
-    
-    # Colorized JSON output (requires jq)
-    alias json='jq .'
+# Git with color output
+alias git='git -c color.ui=auto'
 
-    if [ "$current_shell" = "zsh" ]; then
-        # Zsh specific color options
-        alias ls='ls -G'
-        alias dir='dir -G'
-    else
-        # Bash specific color options
-        alias ls='ls --color=auto'
-        alias dir='dir --color=auto'
-    fi
+# Colorized JSON output (requires jq)
+alias json='jq .'
 
-    # Syntax highlighting for various file types using bat (if installed)
-    if command -v bat >/dev/null 2>&1; then
-        alias cat='bat --theme=TwoDark'
-        alias less='bat --theme=TwoDark --pager="less -R"'
-    fi
+if [ "$current_shell" = "zsh" ]; then
+  # Zsh specific color options
+  alias ls='ls -G'
+  alias dir='dir -G'
+else
+  # Bash specific color options
+  alias ls='ls --color=auto'
+  alias dir='dir --color=auto'
+fi
+
+# Syntax highlighting for various file types using bat (if installed)
+if command -v bat >/dev/null 2>&1; then
+  alias cat='bat --theme=TwoDark'
+  alias less='bat --theme=TwoDark --pager="less -R"'
+fi
 fi
 
 # Easier navigation
