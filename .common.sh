@@ -98,7 +98,7 @@ fi
 
 ##################################################
 # bash specific
-if [ $current_shell = "bash" ] ; then
+if [ $current_shell = "-zsh" ] ; then
 PROMPT='%(?..%F{red}?%? )%F{green}%* %{$fg_bold[blue]%}%1~%{$reset_color%} $(git_prompt_info)'
 fi
 
