@@ -10,6 +10,7 @@
 	autocrlf = input
 
 [alias]
+     cl = !${HOME}/bin/git_clone
      co = checkout
      br = branch
      sw = switch
