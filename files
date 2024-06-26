@@ -1,0 +1,8 @@
+.SpaceVim.d
+.aliases
+.common.sh
+.config/fish/config.fish
+.gitconfig
+.tmux.conf
+.vimrc_compatible
+
