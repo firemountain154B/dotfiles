@@ -8,7 +8,6 @@
 	email = tony_t_liu@outlook.com
 [core]
 	autocrlf = input
-
 [alias]
      cl = !${HOME}/bin/git_clone
      co = checkout

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export PATH="$HOME/bin:$PATH"
+export PATH="$HOME/bin:$HOME/dotfiles:$PATH"
 current_shell=$(ps -p $$ -ocomm=)
 
 
@@ -8,7 +8,14 @@ if [ $current_shell = "bash" ] ; then
    
 # BASH SPECIFIC
 
-PS1='$(if [ $? -ne 0 ]; then echo -e ${RED}; else echo -e ${GREEN}; fi)→ ${BLUE}\W ${RESET} $(git branch &>/dev/null | grep "^\*" | sed "s/^\* //")'
+git_branch() {
+    branch=$(git branch 2>/dev/null | grep '*' | sed 's/* //')
+    if [ -n "$branch" ]; then
+      echo " ($branch)"
+    fi
+  }
+
+PS1='$(if [ $? -ne 0 ]; then echo -e "\[\033[31m\]→"; else echo -e "\[\033[32m\]→"; fi) \[\033[32m\]\h \[\033[1;34m\]\W\[\033[0m\]$(git_branch) '
 
 elif [ $current_shell = "-zsh" ] ; then
    
@@ -56,7 +63,7 @@ alias dir='dir --color=auto'
 fi
 
 
-source ${HOME}/.aliases
+source $HOME/dotfiles/common_aliases
 
 CHECK_OUTPUT="$HOME/.check_update_output.txt"
 [ -e $CHECK_OUTPUT ] || touch $CHECK_OUTPUT
