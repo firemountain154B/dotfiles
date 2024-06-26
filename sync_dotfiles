@@ -10,12 +10,12 @@ if [ ! -d "$DOTFILES_DIR" ]; then
     git clone $GITHUB_REPO $DOTFILES_DIR
 fi
 
-FILES=( .tmux.conf .gitignore )
+FILES=( .tmux.conf .gitconfig )
 
 if [ -d "$HOME/.Spacevim" ] ; then 
-  FILES+=".Spacevim.d"
+  FILES+=(".Spacevim.d")
 else
-  FILES+=".vimrc"
+  FILES+=(".vimrc")
 fi
 
 if [ $# -ne 1 ]; then 
