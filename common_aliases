@@ -12,7 +12,7 @@ alias l='ls -lAh'
 alias wget='wget -c'
 alias df='df -H'
 alias du='du -ch'
-alias cpv='rsync -ah --progres'
+alias cpv='rsync -ah --progress'
 
 ## pass options to free ##
 alias meminfo='free -m -l -t'
