@@ -12,8 +12,8 @@ fi
 
 FILES=( .tmux.conf .gitconfig )
 
-if [ -d "$HOME/.Spacevim" ] ; then 
-  FILES+=(".Spacevim.d")
+if [ -d "$HOME/.SpaceVim" ] ; then 
+  FILES+=(".SpaceVim.d")
 else
   FILES+=(".vimrc")
 fi
