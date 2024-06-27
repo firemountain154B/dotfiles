@@ -2,6 +2,7 @@
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
+alias rm='rm -i'
 
 # List directory contents
 alias la='ls -a'
@@ -12,7 +13,8 @@ alias l='ls -lAh'
 alias wget='wget -c'
 alias df='df -H'
 alias du='du -ch'
-alias cpv='rsync -ah --progress'
+alias rsmv='rsync -avhP --remove-source-files'
+alias rscp='rsync -avhP'
 
 ## pass options to free ##
 alias meminfo='free -m -l -t'
