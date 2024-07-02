@@ -1,11 +1,14 @@
 #!/bin/bash
 
 export PATH="$HOME/bin:$HOME/dotfiles:$PATH"
-if [ -e $HOME/.profile ] ; then source $HOME/.profile fi
+
+if [ -e $HOME/.profile ] ; then 
+    source $HOME/.profile 
+fi
+
 current_shell=$(ps -p $$ -ocomm=)
 
-
-if [ $current_shell = "bash" ] ; then
+if [[ $current_shell == "*bash*" ]] ; then
    
 # BASH SPECIFIC
 
@@ -18,7 +21,7 @@ git_branch() {
 
 PS1='$(if [ $? -ne 0 ]; then echo -e "\[\033[31m\]→"; else echo -e "\[\033[32m\]→"; fi) \[\033[32m\]\h \[\033[1;34m\]\W\[\033[0m\]$(git_branch) '
 
-elif [ $current_shell = "-zsh" ] ; then
+elif [[ $current_shell = "*zsh*" ]] ; then
    
 # ZSH SPECIFIC
 
@@ -63,7 +66,6 @@ alias ls='ls --color=auto'
 alias dir='dir --color=auto'
 fi
 
-
 source $HOME/dotfiles/common_aliases
 
 CHECK_OUTPUT="$HOME/.check_update_output.txt"
@@ -74,3 +76,4 @@ cat /dev/null > $CHECK_OUTPUT
 check_update "$HOME/bin" --bg "$CHECK_OUTPUT"
 check_update "$HOME/dotfiles" --bg "$CHECK_OUTPUT"
 background "sync_dotfiles d" /dev/null
+
