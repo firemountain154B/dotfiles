@@ -8,7 +8,7 @@ fi
 
 current_shell=$(ps -p $$ -ocomm=)
 
-if [[ $current_shell =~ "*bash*" ]] ; then
+if [[ $current_shell == *"bash"* ]] ; then
    
 # BASH SPECIFIC
 
@@ -21,7 +21,7 @@ git_branch() {
 
 PS1='$(if [ $? -ne 0 ]; then echo -e "\[\033[31m\]→"; else echo -e "\[\033[32m\]→"; fi) \[\033[32m\]\h \[\033[1;34m\]\W\[\033[0m\]$(git_branch) '
 
-elif [[ $current_shell =~ "*zsh*" ]] ; then
+elif [[ $current_shell == *"zsh"* ]] ; then
    
 # ZSH SPECIFIC
 
