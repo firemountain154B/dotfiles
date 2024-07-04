@@ -1,6 +1,8 @@
 #!/bin/bash
 
 export PATH="$HOME/bin:$HOME/dotfiles:$PATH"
+source $HOME/.profile
+
 current_shell=$(ps -p $$ -ocomm=)
 
 
