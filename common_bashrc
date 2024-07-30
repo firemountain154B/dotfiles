@@ -50,12 +50,5 @@ if [ -n "$ncolors" ] && [ $ncolors -ge 8 ]; then
 fi
 
 source $HOME/dotfiles/common_aliases
-
-CHECK_OUTPUT="$HOME/.check_update_output.txt"
-[ -e $CHECK_OUTPUT ] || touch $CHECK_OUTPUT
-cat $CHECK_OUTPUT
-cat /dev/null > $CHECK_OUTPUT
-
-check_update "$HOME/dotfiles" --bg "$CHECK_OUTPUT"
-background "sync_dotfiles d" /dev/null
+background_update
 

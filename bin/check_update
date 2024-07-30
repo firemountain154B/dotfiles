@@ -1,54 +1,33 @@
 #!/bin/bash
 
-if [ $# -ne 1 ] && [ $# -ne 3 ] ; then
-  echo "$0 dir [--bg outfile] bg for running in background, expect 1 or 3 args"
+if [ $# -ne 1 ] ; then
+  echo "$0 dir"
   exit 1
 fi
 
 TARGET_DIR=$1
 
-if [ $# -eq 3 ]; then
-  if [ $2  = "--bg" ] ; then
-    tmux new-session -d -s "check_update_$1"  "$0 '$1' >> '$3' 2>&1"
-    exit 0
-  fi
-fi
-# Check if the directory exists
 if [ ! -d "$TARGET_DIR" ]; then
     echo "Directory does not exist: $TARGET_DIR"
     exit 1
 fi
-
-# Change to the ~/bin directory
 cd "$TARGET_DIR" || exit 1
 
-# Check if the directory is a Git repository
 if [ ! -d .git ]; then
     echo "Not a Git repository: $TARGET_DIR"
     exit 1
 fi
 
-# Fetch the latest changes from the remote repository
-# Check if there are any changes to pull
-# First, determine the current branch name
 current_branch=$(git rev-parse --abbrev-ref HEAD)
 
-# Fetch the latest changes from the remote without merging them
-git fetch origin
+git fetch origin > /dev/null
 
-# Now, compare the current local branch with its remote counterpart
 if git diff --quiet HEAD origin/"$current_branch"; then
-    echo "The $TARGET_DIR directory is up to date with the remote $current_branch branch."
+    echo "The $TARGET_DIR directory is up to date"
+elif git merge origin/"$current_branch" > /dev/null ; then
+    echo "$TARGET_DIR merge successful. ✅"
 else
-    echo "The $TARGET_DIR directory has updates available on the remote $current_branch branch. Attempting to merge..."
-
-    if git merge origin/"$current_branch"; then
-        echo "Merge successful. Changes have been automatically merged and committed."
-    else
-        echo "Merge conflict detected. Please merge the changes manually."
-        # Abort the merge attempt to revert to the pre-merge state
-        git merge --abort
-    fi
+    echo "$TARGET_DIR merge conflict detected. Please merge the changes manually. ❌"
+    git merge --abort > /dev/null 
 fi
 
-git status -sb
