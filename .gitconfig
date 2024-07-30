@@ -14,7 +14,7 @@
      br = branch
      sw = switch
      mrg = merge
-     st = status
+     st = status -s
      ad = add
      psh = push
      se = !git rev-list --all | xargs git grep -F
