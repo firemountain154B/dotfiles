@@ -56,7 +56,6 @@ CHECK_OUTPUT="$HOME/.check_update_output.txt"
 cat $CHECK_OUTPUT
 cat /dev/null > $CHECK_OUTPUT
 
-check_update "$HOME/bin" --bg "$CHECK_OUTPUT"
 check_update "$HOME/dotfiles" --bg "$CHECK_OUTPUT"
 background "sync_dotfiles d" /dev/null
 
