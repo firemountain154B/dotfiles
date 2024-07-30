@@ -1,0 +1,22 @@
+#! /bin/bash
+
+name="$(pname .venv)"
+echo "${name}"
+
+if [ -z "${VENV_DIR}" ]; then
+  echo "need to set environment variable VENV_DIR"
+  exit 1
+fi
+
+actual_venv_dir="${VENV_DIR}/${name}"
+echo "$actual_venv_dir"
+
+python3 -m venv --system-site-packages "$actual_venv_dir"
+ln -s "$actual_venv_dir" .venv
+
+if [ ! -d ".git" ]; then
+  echo "init git"
+  git init
+  init_gitignore
+fi
+

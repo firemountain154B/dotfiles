@@ -1,0 +1,86 @@
+#!/bin/bash
+
+# A simple script to generate .gitignore files based on project type
+
+# Default to 'python' if no argument is provided
+project_type=${1:-python}
+
+# Function to append common ignores to .gitignore
+append_commons() {
+    cat <<EOF >> .gitignore
+
+# Operating System Generated Files
+.DS_Store # MacOS folder metadata
+Thumbs.db # Windows thumbnail cache
+*.swp
+*.swo # Linux/Unix Vim swap files
+
+# Editor and IDE Specific Files
+.vscode/ # VSCode configuration files
+.idea/ # IntelliJ IDEA configuration files
+*.sublime-* # Sublime Text files
+.settings/ # Eclipse files
+
+# Build Output Directories
+# bin/
+# build/
+# out/ # Common build output directories
+# dist/ # Distribution directory for compiled code
+
+# Version Control System Folders
+.svn/
+CVS/ # Subversion and CVS folders
+
+# Temporary Files and Logs
+# *.log # Log files
+*.tmp
+*.temp # Temporary files
+
+# Security and Environment Files
+.env
+.env.local # Environment configuration files
+*.pem
+*.key # Private keys and certificate files
+
+# Database Files
+*.db
+*.sql
+*.sqlite # Database files
+
+EOF
+}
+
+# Generate .gitignore based on project type
+case $project_type in
+    python)
+        echo "__pycache__/" > .gitignore
+        echo "*.py[cod]" >> .gitignore
+        echo "*$py.class" >> .gitignore
+        echo ".env" >> .gitignore
+        echo ".venv" >> .gitignore
+        echo "wandb/" >> .gitignore
+        append_commons
+        ;;
+    node)
+        echo "node_modules/" > .gitignore
+        echo ".env" >> .gitignore
+        echo "npm-debug.log" >> .gitignore
+        echo "yarn-error.log" >> .gitignore
+        append_commons
+        ;;
+    java)
+        echo "*.class" > .gitignore
+        echo "*.jar" >> .gitignore
+        echo "*.war" >> .gitignore
+        echo "*.ear" >> .gitignore
+        echo ".env" >> .gitignore
+        echo "target/" >> .gitignore
+        append_commons
+        ;;
+    *)
+        echo "No template found for the specified project type."
+        exit 1
+        ;;
+esac
+
+echo ".gitignore file generated for $project_type project."

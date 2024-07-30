@@ -1,0 +1,19 @@
+#!/bin/bash 
+
+HELP_STRING="$0 [--http] my-repo-name/repo-url"
+
+if [ $# = 2 ] ; then
+  if [ $1 = '--http' ] ; then
+    git clone "https://github.com/LiuTaowen-Tony/${2}.git"
+  else
+    echo $HELP_STRING
+  fi
+elif [ $# = 1 ] ; then
+  if [[ $1 == *"/"* ]] ; then
+    git clone $1
+  else
+    git clone "git@github.com:LiuTaowen-Tony/${1}.git"
+  fi
+else
+  echo $HELP_STRING
+fi

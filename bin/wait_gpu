@@ -1,0 +1,21 @@
+#!/bin/bash
+
+
+GPU_CHECK_SCRIPT="is_gpus_free"
+
+# GPU ID to monitor
+if [ $# -eq 1 ]; then
+  GPU_ID=$1
+else
+  echo "Please specify a GPU ID."
+  exit 1
+fi
+
+while true; do
+  if $GPU_CHECK_SCRIPT $GPU_ID; then
+    exit 0
+  else
+    sleep 60 
+  fi
+done
+

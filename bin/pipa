@@ -1,0 +1,6 @@
+#! /bin/sh
+
+pip $@
+touch requirements.txt
+echo "$@" >> requirements.txt
+
