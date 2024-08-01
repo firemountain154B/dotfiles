@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export PATH="$HOME/dotfiles/bin:$HOME/dotfiles:$PATH"
+export PATH="$HOME/dotfiles/bin:$PATH"
 
 ############################## SHELL SPECIFIC ##############################
 current_shell=$(ps -p $$ -ocomm=)
