@@ -22,10 +22,10 @@ Thumbs.db # Windows thumbnail cache
 .settings/ # Eclipse files
 
 # Build Output Directories
-# bin/
-# build/
-# out/ # Common build output directories
-# dist/ # Distribution directory for compiled code
+bin/
+build/
+out/ # Common build output directories
+dist/ # Distribution directory for compiled code
 
 # Version Control System Folders
 .svn/
