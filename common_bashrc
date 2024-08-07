@@ -50,5 +50,5 @@ if [ -n "$ncolors" ] && [ $ncolors -ge 8 ]; then
 fi
 
 source $HOME/dotfiles/common_aliases
-background_update
+on_login
 

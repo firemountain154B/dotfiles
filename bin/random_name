@@ -1,0 +1,7 @@
+#! /bin/bash
+
+name=$(shuf -n 3 /usr/share/dict/words | tr '\n' '-')
+# to add a '\n' at the end
+echo $name
+
+

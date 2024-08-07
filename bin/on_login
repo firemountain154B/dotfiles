@@ -1,0 +1,34 @@
+#! /bin/bash
+
+CHECK_OUTPUT="$HOME/.check_update_output.txt"
+[ -e $CHECK_OUTPUT ] || touch $CHECK_OUTPUT
+cat $CHECK_OUTPUT
+cat /dev/null > $CHECK_OUTPUT
+
+check_update $HOME/dotfiles >> $CHECK_OUTPUT & 
+sync_dotfiles d >> $CHECK_OUTPUT &
+
+remove_unused_venvs () {
+    if [ -z "$VENV_DIR" ]; then
+        echo "VENV_DIR not defined"
+        exit 1
+    fi
+
+    if [ ! -d "$VENV_DIR" ]; then
+        echo "$VENV_DIR is not a valid directory"
+        exit 1
+    fi
+
+    local FILES=( $(ls "$VENV_DIR") )
+
+    for dir in "${FILES[@]}"; do
+        local i=$(cat "$VENV_DIR/$dir/dir")
+        if [ ! -d "$i" ] ; then
+            echo "Removed: $i"
+            rm -rf $i
+        fi
+    done
+}
+
+remove_unused_venvs 
+

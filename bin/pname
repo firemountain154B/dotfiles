@@ -1,5 +1,0 @@
-#!/bin/bash 
-
-name="$(pwd | tr '/' '_')_$1"
-echo "${name}"
-

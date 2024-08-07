@@ -1,17 +1,18 @@
 #! /bin/bash
 
-name="$(pname .venv)"
-echo "${name}"
-
 if [ -z "${VENV_DIR}" ]; then
   echo "need to set environment variable VENV_DIR"
   exit 1
 fi
 
+name=$(random_name)
+echo "${name}"
+
 actual_venv_dir="${VENV_DIR}/${name}"
 echo "$actual_venv_dir"
 
 python3 -m venv --system-site-packages "$actual_venv_dir"
+echo "$(pwd)" > "$actual_venv_dir/dir"
 ln -s "$actual_venv_dir" .venv
 
 if [ ! -d ".git" ]; then
