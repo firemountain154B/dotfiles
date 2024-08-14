@@ -9,7 +9,7 @@
 [core]
 	autocrlf = input
 [alias]
-     cl = !${HOME}/bin/git_clone
+     cl = !${HOME}/dotfiles/bin/git_clone
      co = checkout
      br = branch
      sw = switch
