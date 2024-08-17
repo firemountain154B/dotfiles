@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if ! command -v brew &> /dev/null
+then
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"  
+  if [ $? -ne 0 ];  then
+    echo "manual install"
+    git clone https://github.com/Homebrew/brew $HOME/homebrew
+    eval "$(homebrew/bin/brew shellenv)"
+    brew update --force --quiet
+    chmod -R go-w "$(brew --prefix)/share/zsh"
+  fi
+fi
+
+
+

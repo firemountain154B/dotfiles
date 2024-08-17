@@ -1,0 +1,6 @@
+#!/bin/bash
+
+ensure_brew
+
+brew install fish
+
