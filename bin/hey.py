@@ -1,14 +1,16 @@
-#!/Users/tony/bin/venv/bin/python3
+#!/bin/python
+
 import shutil
 import sys
 import time
 import threading
 import argparse
 import os
-import openai
+import requests  # New import for HTTP request
+import json
 from dotenv import load_dotenv
 load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+google_api_key = os.getenv("GOOGLE_API_KEY")
 
 translation_done = False
 
@@ -27,46 +29,33 @@ class BashTranslator:
         self.bash_script = None
         self.messages = [
             {
-                "role":
-                    "system",
-                    "content":
-                    "You are a helpful assistant that translates natural language instructions into bash scripts. Include bash command only"
+                "role": "system",
+                "content": "You are a helpful assistant that translates natural language instructions into bash scripts. Include bash command only"
             },
             {
-                "role":
-                    "user",
-                    "content":
-                    "command: Create a tar archive of the 'project' directory and compress it using gzip\n"
+                "role": "user",
+                "content": "command: Create a tar archive of the 'project' directory and compress it using gzip\n"
             },
             {
                 "role": "assistant",
-                    "content": "tar -czvf project.tar.gz project"
+                "content": "tar -czvf project.tar.gz project"
             },
             {
-                "role":
-                    "user",
-                    "content":
-                    "command: Find all .txt files in the current directory and subdirectories and delete them\n"
+                "role": "user",
+                "content": "command: Find all .txt files in the current directory and subdirectories and delete them\n"
             },
             {
                 "role": "assistant",
-                    "content": "find . -name '*.txt' -type f -delete"
+                "content": "find . -name '*.txt' -type f -delete"
             },
         ]
         self.translation_done = False
 
     def print_animation(self):
         moon_phases = [
-        "🌑 ",
-        "🌒 ",
-        "🌓 ",
-        "🌔 ",
-        "🌕 ",
-        "🌖 ",
-        "🌗 ",
-        "🌘 "
+            "🌑 ", "🌒 ", "🌓 ", "🌔 ", "🌕 ", "🌖 ", "🌗 ", "🌘 "
         ]
-        while not self.translation_done :  # Infinite loop to keep the animation running
+        while not self.translation_done:  # Infinite loop to keep the animation running
             for phase in moon_phases:
                 print(f'\r\t Now thinking {phase} ...', end=' ', flush=True)
                 time.sleep(0.1)  # Adjust the speed of the animation
@@ -74,19 +63,55 @@ class BashTranslator:
     def translate_to_bash(self, natural_language_input):
         new_message = {
             "role": "user",
-            "content":
-                f"command:{natural_language_input}\n"
+            "content": f"command:{natural_language_input}\n"
         }
         self.messages.append(new_message)
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo-0613",
-            messages=self.messages,
-            max_tokens=200)
-        self.bash_script = response.choices[0]["message"]["content"]
-        self.messages.append(
-            {"role": "assistant",
-             "content": self.bash_script}
-        )
+        few_shot_examples = """
+Translate the natural language instruction into a bash command, don't include the triple quote '```'
+
+command: Create a tar archive of the 'project' directory and compress it using gzip
+tar -czvf project.tar.gz project
+
+command: Find all .txt files in the current directory and subdirectories and delete them
+find . -name '*.txt' -type f -delete
+"""
+
+        # Create the full prompt using the few-shot examples and the user's input
+        full_prompt = f"""
+{few_shot_examples}
+
+command: {natural_language_input}
+"""
+
+        # Construct the request for Gemini API
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={google_api_key}"
+        headers = {
+            'Content-Type': 'application/json'
+        }
+        data = {
+            "contents": [
+                {
+                    "parts": [{"text": full_prompt}]
+                }
+            ]
+        }
+        #print(full_prompt)
+
+        # Send the HTTP request to Gemini API
+        response = requests.post(url, headers=headers, data=json.dumps(data))
+
+        # Handle the response
+        if response.status_code == 200:
+            # Extract the translated bash script from the response
+            #print(response.json())
+            self.bash_script = response.json()['candidates'][0]['content']['parts'][0]['text']
+            self.messages.append(
+                {"role": "assistant", "content": self.bash_script}
+            )
+        else:
+            print(f"Error: {response.status_code} - {response.text}")
+            self.bash_script = "An error occurred during translation."
+
         self.translation_done = True
         return self.bash_script
 
@@ -101,8 +126,6 @@ class BashTranslator:
             target=lambda x: self.translate_to_bash(x), args=(natural_language_input,))
 
         translation_thread.start()
-        # while translating command, print animation
-        # also loading library
 
         import sys
         import tempfile
@@ -117,21 +140,20 @@ class BashTranslator:
         sys.stdout.write("\033[K")
 
         print("This might be what you're looking for: ")
-        
+
         print("``` bash")
         print(highlight(self.bash_script, BashLexer(), TerminalFormatter()))
         print("```")
 
         self.bash_script = f"#!/bin/bash \n{self.bash_script}"
 
-        action = input("Would you like to store or execute the script? ([S]ave/[E]xecute/[V]im): "
-                       ).strip().lower()
+        action = input("Would you like to store or execute the script? ([S]ave/[E]xecute/[V]im): ").strip().lower()
         if action[0] == "s":
             filename = input("Please enter the filename to save the script: ")
             with open(filename, 'w') as file:
                 file.write(self.bash_script)
             print(f"Script saved to {filename}")
-        if action[0] == "v":
+        elif action[0] == "v":
             filename = input("Please enter the filename to save the script: ")
             with open(filename, 'w') as file:
                 file.write(self.bash_script)
@@ -154,3 +176,4 @@ class BashTranslator:
 if __name__ == "__main__":
     bash_translator = BashTranslator()
     bash_translator.main()
+
