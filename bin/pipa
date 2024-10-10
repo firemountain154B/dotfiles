@@ -1,6 +1,10 @@
 #! /bin/sh
 
-pip $@
-touch requirements.txt
-echo "$@" >> requirements.txt
+if [ "${@[1]}" = "install" ]; then
+    pip ${@[@]:1}
+    touch requirements.txt
+    echo "${@[@]:2}" >> requirements.txt
+fi
+
+pip ${@[@]:1}
 

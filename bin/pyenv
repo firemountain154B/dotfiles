@@ -1,23 +1,63 @@
 #! /bin/bash
 
-if [ -z "${VENV_DIR}" ]; then
-  echo "need to set environment variable VENV_DIR"
-  exit 1
+if [ -z "$VENV_DIR" ]; then
+    echo "VENV_DIR not defined"
+    exit 1
 fi
 
-name=$(random_name)
-echo "${name}"
-
-actual_venv_dir="${VENV_DIR}/${name}"
-echo "$actual_venv_dir"
-
-python3 -m venv --system-site-packages "$actual_venv_dir"
-echo "$(pwd)" > "$actual_venv_dir/dir"
-ln -s "$actual_venv_dir" .venv
-
-if [ ! -d ".git" ]; then
-  echo "init git"
-  git init
-  init_gitignore
+if [ ! -d "$VENV_DIR" ]; then
+    echo "$VENV_DIR is not a valid directory"
+    exit 1
 fi
+
+REGISTERY_TXT="${VENV_DIR}/registery.txt"
+touch $REGISTERY_TXT
+
+CUR_DIR=$(pwd)
+BASE_NAME=$(basename "$CUR_DIR")
+
+create () {
+    ACTUAL_VENV_DIR="${VENV_DIR}/$(random_name)/${BASE_NAME}"
+    echo "$ACTUAL_VENV_DIR"
+    echo "${ACTUAL_VENV_DIR}" >> "${REGISTERY_TXT}"
+    echo "${CUR_DIR}" >> "${REGISTERY_TXT}"
+
+    mkdir -p "$ACTUAL_VENV_DIR"
+    python3 -m venv "$ACTUAL_VENV_DIR"
+    rm -f "$CUR_DIR/.venv"
+    ln -s "$ACTUAL_VENV_DIR" "$CUR_DIR/.venv"
+
+    if [ ! -d ".git" ]; then
+      echo "init git"
+      git init
+      init_gitignore
+    fi
+}
+
+remove_unused_venvs () {
+    local IS_VENV_DIR="yes"
+    NEW_REGISTERY_TXT="${VENV_DIR}/new_registery.txt"
+    touch "$NEW_REGISTERY_TXT"
+
+    while read LINE; do
+        if [[ "$IS_VENV_DIR" == "yes" ]]; then
+            VENV_DIR="$LINE"
+            IS_VENV_DIR="no"
+        else
+            IS_VENV_DIR="yes"
+            PROJ_DIR="$LINE"
+            if [[ -z "${PROJ_DIR}" ]] || [[ $(readlink "${PROJ_DIR}/.venv") != "${VENV_DIR}" ]] ; then
+                echo "please remove: ${VENV_DIR}"
+            else
+                echo "${PROJ_DIR}">> "${NEW_REGISTERY_TXT}"
+                echo "${VENV_DIR}" >> "${NEW_REGISTERY_TXT}"
+            fi
+        fi
+    done < "${REGISTERY_TXT}"
+    mv "$NEW_REGISTERY_TXT" "$REGISTERY_TXT"
+}
+
+create
+remove_unused_venvs
+
 
