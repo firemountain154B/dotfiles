@@ -7,5 +7,7 @@ export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
 contains {$HOME}/dotfiles $fish_user_paths; or set -Ua fish_user_paths {$HOME}/dotfiles
 contains {$HOME}/dotfiles/bin $fish_user_paths; or set -Ua fish_user_paths {$HOME}/dotfiles/bin
 
-on_login
+if status --is-login
+  on_login
+end
 
