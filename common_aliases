@@ -35,4 +35,6 @@ alias localip="ipconfig getifaddr en0"
 alias ghist="history | grep"
 alias pyenva="source .venv/bin/activate"
 alias vim='vim "+set mouse="'
+alias pip3='hijack-pip'
+alias pip='hijack-pip'
 

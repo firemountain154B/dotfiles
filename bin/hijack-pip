@@ -1,0 +1,72 @@
+#!/bin/bash
+
+# Function to search upwards for a .venv file and check if it points to $VIRTUAL_ENV
+find_venv_root() {
+    local current_dir=$(pwd)
+    
+    while [[ "$current_dir" != "/" ]]; do
+        if [ -L "$current_dir/.venv" ]; then
+            # Resolve the symlink or actual path in .venv
+            linked_venv=$(readlink -f "$current_dir/.venv")
+            
+            # Check if the resolved path matches the current virtual environment
+            if [ "$linked_venv" == "$VIRTUAL_ENV" ]; then
+                echo "$current_dir"
+                return 0
+            fi
+        fi
+        # Move up one directory
+        current_dir=$(dirname "$current_dir")
+    done
+    
+    return 1
+}
+
+if [ -z "$PS1" ]; then
+    # PS1 is unset or empty, indicating this is not an interactive shell, so don't log
+    command pip3 "$@"
+    exit $?
+fi
+
+# Handle non-install commands by forwarding them directly to pip3
+if [[ "$1" != "install" ]]; then
+    # Using 'command' to bypass aliases or functions and run the real pip3 executable
+    # This avoids any potential infinite loops if 'pip3' was aliased to this script.
+    command pip3 "$@"
+    exit $?
+fi
+
+# Step 1: Detect if we are in a virtual environment
+if [ -z "$VIRTUAL_ENV" ]; then
+    echo "You are not in a virtual environment. Forwarding to system pip..."
+    # Forward to the real system pip3 using 'command' to avoid an infinite loop
+    command pip3 "$@"
+    exit $?
+fi
+
+# Step 2: Search for .venv file pointing to $VIRTUAL_ENV
+VENV_ROOT=$(find_venv_root)
+if [ -z "$VENV_ROOT" ]; then
+    echo "Cannot find project root. Forwarding to system pip..."
+    # Use 'command' to directly invoke system or virtual environment pip3
+    command pip3 "$@"
+    exit $?
+fi
+
+# Step 3: Create a pip install history file if it doesn't exist
+HISTORY_FILE="$VENV_ROOT/pip_install_history.log"
+if [ ! -f "$HISTORY_FILE" ]; then
+    touch "$HISTORY_FILE"
+    echo "Created pip install history file at $HISTORY_FILE"
+fi
+
+# Step 4: Log the install command with a timestamp
+echo "command pip3 install $@ # $(date)" >> "$HISTORY_FILE"
+echo "Installation command logged: $@"
+
+# Step 5: Forward the install command to pip3 and capture the exit status
+# Again, using 'command' ensures that we're running the real pip3 executable
+# and not calling this script recursively, avoiding an infinite loop.
+command pip3 "$@"
+exit $?
+
