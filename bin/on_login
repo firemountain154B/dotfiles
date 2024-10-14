@@ -8,6 +8,5 @@ if shopt -q login_shell; then
     cat /dev/null > $CHECK_OUTPUT
 fi
 
-check_update $HOME/dotfiles >> $CHECK_OUTPUT & 
-sync_dotfiles d >> $CHECK_OUTPUT &
+(check_update $HOME/dotfiles >> $CHECK_OUTPUT ; sync_dotfiles d >> $CHECK_OUTPUT) &
 
