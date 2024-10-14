@@ -22,11 +22,6 @@ find_venv_root() {
     return 1
 }
 
-if [ -z "$PS1" ]; then
-    # PS1 is unset or empty, indicating this is not an interactive shell, so don't log
-    command pip3 "$@"
-    exit $?
-fi
 
 # Handle non-install commands by forwarding them directly to pip3
 if [[ "$1" != "install" ]]; then
