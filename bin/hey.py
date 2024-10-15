@@ -8,8 +8,6 @@ import argparse
 import os
 import requests  # New import for HTTP request
 import json
-from dotenv import load_dotenv
-load_dotenv()
 google_api_key = os.getenv("GOOGLE_API_KEY")
 
 translation_done = False
