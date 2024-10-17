@@ -5,26 +5,31 @@ if [ -z "$VENV_DIR" ]; then
     exit 1
 fi
 
+if [ -f .venv ]; then
+    echo ".venv exists"
+    exit 1
+fi
+
 if [ ! -d "$VENV_DIR" ]; then
     echo "$VENV_DIR is not a valid directory"
     exit 1
 fi
 
-REGISTERY_TXT="${VENV_DIR}/registery.txt"
-touch $REGISTERY_TXT
-
 CUR_DIR=$(pwd)
 BASE_NAME=$(basename "$CUR_DIR")
 
 create () {
-    ACTUAL_VENV_DIR="${VENV_DIR}/$(random_name)/${BASE_NAME}"
-    echo "$ACTUAL_VENV_DIR"
-    echo "${ACTUAL_VENV_DIR}" >> "${REGISTERY_TXT}"
-    echo "${CUR_DIR}" >> "${REGISTERY_TXT}"
+    RANDOM_NAME=$(random_name)
 
+    ACTUAL_VENV_DIR="${VENV_DIR}/${RANDOM_NAME}${BASE_NAME}/${BASE_NAME}"
     mkdir -p "$ACTUAL_VENV_DIR"
+    echo "$ACTUAL_VENV_DIR"
+
+    LINK_BACK="${VENV_DIR}/${RANDOM_NAME}${BASE_NAME}/link_back.txt"
+    touch "$LINK_BACK"
+
+    echo "${CUR_DIR}" >> "${LINK_BACK}"
     python3 -m venv "$ACTUAL_VENV_DIR"
-    rm -f "$CUR_DIR/.venv"
     ln -s "$ACTUAL_VENV_DIR" "$CUR_DIR/.venv"
 
     if [ ! -d ".git" ]; then
@@ -35,26 +40,18 @@ create () {
 }
 
 remove_unused_venvs () {
-    local IS_VENV_DIR="yes"
-    NEW_REGISTERY_TXT="${VENV_DIR}/new_registery.txt"
-    touch "$NEW_REGISTERY_TXT"
-
-    while read LINE; do
-        if [[ "$IS_VENV_DIR" == "yes" ]]; then
-            VENV_DIR="$LINE"
-            IS_VENV_DIR="no"
-        else
-            IS_VENV_DIR="yes"
-            PROJ_DIR="$LINE"
-            if [[ -z "${PROJ_DIR}" ]] || [[ $(readlink "${PROJ_DIR}/.venv") != "${VENV_DIR}" ]] ; then
-                echo "please remove: ${VENV_DIR}"
-            else
-                echo "${PROJ_DIR}">> "${NEW_REGISTERY_TXT}"
-                echo "${VENV_DIR}" >> "${NEW_REGISTERY_TXT}"
-            fi
+    for LINE in $(ls ${VENV_DIR}); do
+        PROJ_DIR=$(tail -n 1 "${VENV_DIR}/${LINE}/link_back.txt")
+        if [ ! -d "${PROJ_DIR}" ]; then
+            echo "please remove: ${VENV_DIR}/${LINE}"
+            exit 0
         fi
-    done < "${REGISTERY_TXT}"
-    mv "$NEW_REGISTERY_TXT" "$REGISTERY_TXT"
+        PROJ_VENV=$(readlink "${PROJ_DIR}/.venv")
+        PROJ_VENV_PARENT=$(dirname "${PROJ_VENV}")
+        if [[ "$PROJ_VENV_PARENT" != "${VENV_DIR}/${LINE}" ]] ; then
+            echo "please remove: ${VENV_DIR}/${LINE}"
+        fi
+    done
 }
 
 create
