@@ -1,7 +1,7 @@
 #!/bin/bash
 
 while read -r line ; do
-    export "$line"
+    export "$line" 2> /dev/null
 done < $HOME/dotfiles/bin/.env
 
 python3 $HOME/dotfiles/bin/hey.py $@
