@@ -49,7 +49,7 @@ if [ -z "$VENV_ROOT" ]; then
 fi
 
 # Step 3: Create a pip install history file if it doesn't exist
-HISTORY_FILE="$VENV_ROOT/pip_install_history.log"
+HISTORY_FILE="$VENV_ROOT/pip_install_history.sh"
 if [ ! -f "$HISTORY_FILE" ]; then
     touch "$HISTORY_FILE"
     echo "Created pip install history file at $HISTORY_FILE"

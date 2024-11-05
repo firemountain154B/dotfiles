@@ -44,7 +44,6 @@ remove_unused_venvs () {
         PROJ_DIR=$(tail -n 1 "${VENV_DIR}/${LINE}/link_back.txt")
         if [ ! -d "${PROJ_DIR}" ]; then
             echo "please remove: ${VENV_DIR}/${LINE}"
-            exit 0
         fi
         PROJ_VENV=$(readlink "${PROJ_DIR}/.venv")
         PROJ_VENV_PARENT=$(dirname "${PROJ_VENV}")
