@@ -2,9 +2,6 @@
 
 # A simple script to generate .gitignore files based on project type
 
-# Default to 'python' if no argument is provided
-project_type=${1:-python}
-
 # Function to append common ignores to .gitignore
 append_commons() {
     cat <<EOF >> .gitignore
@@ -25,14 +22,12 @@ Thumbs.db
 bin/
 build/
 out/
-dist/
 
 # Version Control System Folders
 .svn/
 CVS/
 
 # Temporary Files and Logs
-# *.log
 *.tmp
 *.temp
 
@@ -47,40 +42,25 @@ CVS/
 *.sql
 *.sqlite
 
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv
+.venv/
+wandb/
+
+node_modules/
+npm-debug.log
+yarn-error.log
+
+*.class*.jar
+*.war
+*.ear
+
 EOF
 }
 
 # Generate .gitignore based on project type
-case $project_type in
-    python)
-        echo "__pycache__/" > .gitignore
-        echo "*.py[cod]" >> .gitignore
-        echo "*.egg-info/" >> .gitignore
-        echo ".env" >> .gitignore
-        echo ".venv" >> .gitignore
-        echo "wandb/" >> .gitignore
-        append_commons
-        ;;
-    node)
-        echo "node_modules/" > .gitignore
-        echo ".env" >> .gitignore
-        echo "npm-debug.log" >> .gitignore
-        echo "yarn-error.log" >> .gitignore
-        append_commons
-        ;;
-    java)
-        echo "*.class" > .gitignore
-        echo "*.jar" >> .gitignore
-        echo "*.war" >> .gitignore
-        echo "*.ear" >> .gitignore
-        echo ".env" >> .gitignore
-        echo "target/" >> .gitignore
-        append_commons
-        ;;
-    *)
-        echo "No template found for the specified project type."
-        exit 1
-        ;;
-esac
+append_commons
 
 echo ".gitignore file generated for $project_type project."

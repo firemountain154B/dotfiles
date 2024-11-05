@@ -27,7 +27,7 @@ find_venv_root() {
 if [[ "$1" != "install" ]]; then
     # Using 'command' to bypass aliases or functions and run the real pip3 executable
     # This avoids any potential infinite loops if 'pip3' was aliased to this script.
-    $VIRTUAL_ENV/bin/pip3 "$@"
+    command pip3 $@
     exit $?
 fi
 
@@ -35,7 +35,7 @@ fi
 if [ -z "$VIRTUAL_ENV" ]; then
     echo "You are not in a virtual environment. Forwarding to system pip..."
     # Forward to the real system pip3 using 'command' to avoid an infinite loop
-    $VIRTUAL_ENV/bin/pip3 "$@"
+    command pip3 $@
     exit $?
 fi
 
@@ -44,7 +44,7 @@ VENV_ROOT=$(find_venv_root)
 if [ -z "$VENV_ROOT" ]; then
     echo "Cannot find project root. Forwarding to system pip..."
     # Use 'command' to directly invoke system or virtual environment pip3
-    $VIRTUAL_ENV/bin/pip3 "$@"
+    command pip3 $@
     exit $?
 fi
 
@@ -63,6 +63,6 @@ chmod +x $HISTORY_FILE
 # Step 5: Forward the install command to pip3 and capture the exit status
 # Again, using 'command' ensures that we're running the real pip3 executable
 # and not calling this script recursively, avoiding an infinite loop.
-$VIRTUAL_ENV/bin/pip3 "$@"
+command pip3
 exit $?
 
