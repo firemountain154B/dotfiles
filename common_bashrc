@@ -5,12 +5,13 @@ export PATH="$HOME/dotfiles/bin:$PATH"
 ############################## SHELL SPECIFIC ##############################
 current_shell=$(ps -p $$ -ocomm=)
 
-if [[ $current_shell == *"bash"* ]] ; then # BASH SPECIFIC
 git_branch() {
     branch=$(git branch 2>/dev/null | grep '*' | sed 's/* //')
     [ -n "$branch" ] && echo " ($branch)"
 }
 
+
+if [[ $current_shell == *"bash"* ]] ; then # BASH SPECIFIC
 PS1='$(if [ $? -ne 0 ]; then echo -e "\[\033[31m\]→"; else echo -e "\[\033[32m\]→"; fi) \[\033[32m\]\h \[\033[1;34m\]\W\[\033[0m\]$(git_branch) '
 
 elif [[ $current_shell == *"zsh"* ]] ; then # ZSH SPECIFIC
@@ -27,7 +28,20 @@ HISTFILE="${HOME}/.zsh_history"
 HISTSIZE=2000
 SAVEHIST=5000
 autoload -Uz compinit && compinit 
-PROMPT='%(?..%F{red}?%? )%B%F{lime}%1~ %f'
+# PROMPT='%(?..%F{red}?%? )%B%F{lime}%1~ %f'
+
+precmd() {
+  # Determine if the last command succeeded or failed
+  if [ $? -ne 0 ]; then
+    arrow_color="%F{red}"
+  else
+    arrow_color="%F{green}"
+  fi
+
+  # Build the prompt
+  PROMPT="${arrow_color}→ %F{green}%m %F{blue}%B%~%b%f$(git_branch) %f"
+}
+
 fi
 ############################## SHELL SPECIFIC END ##############################
 
@@ -45,13 +59,12 @@ if [ -n "$ncolors" ] && [ $ncolors -ge 8 ]; then
   alias ip='ip -color=auto'
   alias git='git -c color.ui=auto'
   alias json='jq .'
-  alias ls='ls --color=auto'
   alias dir='dir --color=auto'
 fi
 
 source $HOME/dotfiles/common_aliases
 
-if shopt -q login_shell; then
+if [[ $- == *i* ]] ; then
   on_login
 fi
 
