@@ -2,8 +2,8 @@
 
 export PATH="$HOME/dotfiles/bin:$PATH"
 
-############################## SHELL SPECIFIC ##############################
 current_shell=$(ps -p $$ -ocomm=)
+export MAKE='make -j16'
 
 git_branch() {
     branch=$(git branch 2>/dev/null | grep '*' | sed 's/* //')
@@ -11,37 +11,34 @@ git_branch() {
 }
 
 
+############################## SHELL SPECIFIC ##############################
 if [[ $current_shell == *"bash"* ]] ; then # BASH SPECIFIC
-PS1='$(if [ $? -ne 0 ]; then echo -e "\[\033[31m\]→"; else echo -e "\[\033[32m\]→"; fi) \[\033[32m\]\h \[\033[1;34m\]\W\[\033[0m\]$(git_branch) '
-
+  PS1='$(if [ $? -ne 0 ]; then echo -e "\[\033[31m\]→"; else echo -e "\[\033[32m\]→"; fi) \[\033[32m\]\h \[\033[1;34m\]\W\[\033[0m\]$(git_branch) '
 elif [[ $current_shell == *"zsh"* ]] ; then # ZSH SPECIFIC
-setopt CORRECT
-setopt CORRECT_ALL
-setopt NO_CASE_GLOB
-setopt SHARE_HISTORY # share history across multiple zsh sessions
-setopt APPEND_HISTORY # append to history
-setopt HIST_EXPIRE_DUPS_FIRST # expire duplicates first
-setopt HIST_IGNORE_DUPS # do not store duplications
-setopt HIST_FIND_NO_DUPS #ignore duplicates when searching
-setopt HIST_REDUCE_BLANKS # removes blank lines from history
-HISTFILE="${HOME}/.zsh_history"
-HISTSIZE=2000
-SAVEHIST=5000
-autoload -Uz compinit && compinit 
-# PROMPT='%(?..%F{red}?%? )%B%F{lime}%1~ %f'
+  setopt CORRECT
+  setopt CORRECT_ALL
+  setopt NO_CASE_GLOB
+  setopt SHARE_HISTORY # share history across multiple zsh sessions
+  setopt APPEND_HISTORY # append to history
+  setopt HIST_EXPIRE_DUPS_FIRST # expire duplicates first
+  setopt HIST_IGNORE_DUPS # do not store duplications
+  setopt HIST_FIND_NO_DUPS #ignore duplicates when searching
+  setopt HIST_REDUCE_BLANKS # removes blank lines from history
+  HISTFILE="${HOME}/.zsh_history"
+  HISTSIZE=2000
+  SAVEHIST=5000
+  autoload -Uz compinit && compinit 
+  precmd() {
+    # Determine if the last command succeeded or failed
+    if [ $? -ne 0 ]; then
+      arrow_color="%F{red}"
+    else
+      arrow_color="%F{green}"
+    fi
 
-precmd() {
-  # Determine if the last command succeeded or failed
-  if [ $? -ne 0 ]; then
-    arrow_color="%F{red}"
-  else
-    arrow_color="%F{green}"
-  fi
-
-  # Build the prompt
-  PROMPT="${arrow_color}→ %F{green}%m %F{blue}%B%~%b%f$(git_branch) %f"
-}
-
+    # Build the prompt
+    PROMPT="${arrow_color}→ %F{green}%m %F{blue}%B%~%b%f$(git_branch) %f"
+  }
 fi
 ############################## SHELL SPECIFIC END ##############################
 
