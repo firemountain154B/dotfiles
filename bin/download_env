@@ -1,0 +1,3 @@
+#!/bin/bash
+scp tl2020@shell1.doc.ic.ac.uk:/homes/tl2020/dotfiles/bin/.env $HOME/dotfiles/bin/
+
