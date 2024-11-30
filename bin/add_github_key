@@ -1,0 +1,34 @@
+#!/bin/bash
+
+if [ ! -f "$HOME/.ssh/id_rsa.pub" ] ; then
+    ssh-keygen
+fi
+
+
+# Replace with your GitHub username and access token
+USERNAME="LiuTaowen-Tony"
+GITHUB_TOKEN=$(ssh tl2020@shell1.doc.ic.ac.uk 'cat /homes/tl2020/.ssh/github-key')
+
+KEY_TITLE=$(hostname)
+# Set the public key content (you can manually paste the output of 'cat ~/.ssh/id_rsa.pub' here)
+SSH_KEY=$(cat ~/.ssh/id_rsa.pub)
+
+# GitHub API endpoint to add the SSH key
+API_URL="https://api.github.com/user/keys"
+
+# Add the SSH key to GitHub account
+response=$(curl -s -L -X POST \
+  -H "Accept: application/vnd.github+json" \
+  -H "Authorization: Bearer $GITHUB_TOKEN" \
+  -H "X-GitHub-Api-Version: 2022-11-28" \
+  $API_URL \
+  -d "{\"title\":\"$KEY_TITLE\",\"key\":\"$SSH_KEY\"}")    
+
+# Check if the key was successfully added
+if echo "$response" | grep -q '"id"'; then
+    echo "SSH key successfully added to GitHub!"
+else
+    echo "Failed to add SSH key to GitHub. Response:"
+    echo "$response"
+    exit 1
+fi
