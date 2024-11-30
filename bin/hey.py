@@ -1,12 +1,11 @@
 #!/bin/python
 
-import shutil
 import sys
 import time
 import threading
-import argparse
 import os
-import requests  # New import for HTTP request
+# import requests  # New import for HTTP request
+import urllib3
 import json
 google_api_key = os.getenv("GOOGLE_API_KEY")
 
@@ -96,18 +95,22 @@ command: {natural_language_input}
         #print(full_prompt)
 
         # Send the HTTP request to Gemini API
-        response = requests.post(url, headers=headers, data=json.dumps(data))
+        http = urllib3.PoolManager()
+        data_bytes = json.dumps(data).encode('utf-8')
+        response = http.request('POST', url, body=data_bytes, headers=headers)
+        # response = requests.post(url, headers=headers, data=json.dumps(data))
 
         # Handle the response
-        if response.status_code == 200:
+        if response.status == 200:
             # Extract the translated bash script from the response
             #print(response.json())
-            self.bash_script = response.json()['candidates'][0]['content']['parts'][0]['text']
+            response_json = json.loads(response.data.decode("utf-8"))
+            self.bash_script = response_json['candidates'][0]['content']['parts'][0]['text']
             self.messages.append(
                 {"role": "assistant", "content": self.bash_script}
             )
         else:
-            print(f"Error: {response.status_code} - {response.text}")
+            print(f"Error: {response.status} - {response_json}")
             self.bash_script = "An error occurred during translation."
 
         self.translation_done = True
@@ -125,12 +128,15 @@ command: {natural_language_input}
 
         translation_thread.start()
 
-        import sys
         import tempfile
         import subprocess
-        from pygments import highlight
-        from pygments.lexers import BashLexer
-        from pygments.formatters import TerminalFormatter
+        try:
+            from pygments import highlight
+            from pygments.lexers import BashLexer
+            from pygments.formatters import TerminalFormatter
+            _highlight = lambda x : highlight(x, BashLexer(), TerminalFormatter())
+        except ImportError:
+            _highlight = lambda x : x
         self.print_animation()
         translation_thread.join()
 
@@ -140,7 +146,7 @@ command: {natural_language_input}
         print("This might be what you're looking for: ")
 
         print("``` bash")
-        print(highlight(self.bash_script, BashLexer(), TerminalFormatter()))
+        print(_highlight(self.bash_script))
         print("```")
 
         self.bash_script = f"#!/bin/bash \n{self.bash_script}"
