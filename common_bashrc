@@ -7,15 +7,39 @@ source "$HOME/dotfiles/bin/export_build"
 current_shell=$(ps -p $$ -ocomm=)
 export MAKE='make -j16'
 
-git_branch() {
+git_info() {
     branch=$(git branch 2>/dev/null | grep '*' | sed 's/* //')
-    [ -n "$branch" ] && echo " ($branch)"
+    if [ -n "$branch" ] ; then
+        if git diff-index --quiet HEAD --; then
+            echo " ($branch)"
+        else
+            echo " ($branch)⚠️ "
+        fi
+    fi
+
 }
+
+capture_execution_time() {
+    local exit_status=$? # Capture the exit status of the last command
+    if [[ $last_command_duration != "" ]]; then
+        #echo -e "${last_command_duration}"
+    fi
+}
+
+PROMPT_COMMAND='
+start_time=$SECONDS
+if [[ -n $last_command_start ]]; then
+    last_command_duration=$(( SECONDS - last_command_start ))
+else
+    last_command_duration=""
+fi
+last_command_start=$start_time
+'
 
 
 ############################## SHELL SPECIFIC ##############################
 if [[ $current_shell == *"bash"* ]] ; then # BASH SPECIFIC
-  PS1='$(if [ $? -ne 0 ]; then echo -e "\[\033[31m\]→"; else echo -e "\[\033[32m\]→"; fi) \[\033[32m\]\h \[\033[1;34m\]\W\[\033[0m\]$(git_branch) '
+  PS1='$(if [ $? -ne 0 ]; then echo -e "\[\033[31m\]→"; else echo -e "\[\033[32m\]→"; fi)\[\033[0m\]$(capture_execution_time) \[\033[32m\]\h \[\033[1;34m\]\W\[\033[0m\]$(git_info) '
 elif [[ $current_shell == *"zsh"* ]] ; then # ZSH SPECIFIC
   setopt CORRECT
   setopt CORRECT_ALL
@@ -37,9 +61,16 @@ elif [[ $current_shell == *"zsh"* ]] ; then # ZSH SPECIFIC
     else
       arrow_color="%F{green}"
     fi
+    start_time=$SECONDS
+    if [[ -n $last_command_start ]]; then
+        last_command_duration=$(( SECONDS - last_command_start ))
+    else
+        last_command_duration=""
+    fi
+    last_command_start=$start_time
 
     # Build the prompt
-    PROMPT="${arrow_color}→ %F{green}%m %F{blue}%B%~%b%f$(git_branch) %f"
+    PROMPT="${arrow_color}→%f$(capture_execution_time) %F{green}%m %F{blue}%B%~%b%f$(git_info) %f"
   }
 fi
 ############################## SHELL SPECIFIC END ##############################
