@@ -21,9 +21,9 @@ git_info() {
 
 capture_execution_time() {
     local exit_status=$? # Capture the exit status of the last command
-    if [[ $last_command_duration != "" ]]; then
-        #echo -e "${last_command_duration}"
-    fi
+   # if [[ $last_command_duration != "" ]]; then
+   #     #echo -e "${last_command_duration}"
+   # fi
 }
 
 PROMPT_COMMAND='

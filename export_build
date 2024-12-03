@@ -1,6 +1,8 @@
 #!/bin/bash
 
-[ ! -d "$HOME/build" ] || mkdir -p "$HOME/build"
+if [ ! -d "$HOME/build" ] ; then 
+    mkdir -p "$HOME/build" 
+fi
 
 if find "$HOME/build" -mindepth 1 -print -quit | grep -q .  ; then
   # Iterate through all subdirectories of $HOME/build
