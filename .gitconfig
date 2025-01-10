@@ -9,14 +9,9 @@
 [core]
 	autocrlf = input
 [alias]
+     ini = !git init && init_gitignore
      cl = !${HOME}/dotfiles/bin/git_clone
-     co = checkout
-     br = branch
-     sw = switch
-     mrg = merge
      st = status -s
-     ad = add
-     psh = push
      se = !git rev-list --all | xargs git grep -F
      cm = commit -m
      acm = !git add . && git commit -m

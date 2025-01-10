@@ -31,12 +31,6 @@ create () {
     echo "${CUR_DIR}" >> "${LINK_BACK}"
     python3 -m venv "$ACTUAL_VENV_DIR"
     ln -s "$ACTUAL_VENV_DIR" "$CUR_DIR/.venv"
-
-    if [ ! -d ".git" ]; then
-      echo "init git"
-      git init
-      init_gitignore
-    fi
 }
 
 remove_unused_venvs () {
