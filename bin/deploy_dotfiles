@@ -29,10 +29,9 @@ if __name__ == "__main__":
 
     if os.path.exists(spacevim_path):
         if os.path.islink(spacevim_path):
-            os.remove(spacevim_path)
+            os.remove(spacevimd_path)
         else:
-            shutil.rmtree(spacevim_path)
-        print(os.path.exists(dotfiles_spacevim))
+            shutil.rmtree(spacevimd_path)
         os.symlink(dotfiles_spacevim, spacevimd_path)
     elif os.path.exists(vimrc_path):
         os.remove(vimrc_path)
