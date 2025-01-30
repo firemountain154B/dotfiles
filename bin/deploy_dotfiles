@@ -34,4 +34,4 @@ if __name__ == "__main__":
         os.symlink(dotfiles_spacevim, spacevim_path)
     elif os.path.exists(vimrc_path):
         os.remove(vimrc_path)
-        shutil.symlink(dotfiles_vimrc, vimrc_path)
+        os.symlink(dotfiles_vimrc, vimrc_path)
