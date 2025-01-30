@@ -73,15 +73,15 @@ def install_previous(venv_dir):
 
     history_file = os.path.join(project_root, "pip_install_history.sh")
     if history_file:
-        try:
-            with open(history_file, "r") as f:
-                for line in f:
-                    if line.startswith("pip3 install"):
+        with open(history_file, "r") as f:
+            for line in f:
+                if "pip3 install" in line:
+                    try:
                         command = line.split("#")[0].strip()
                         print(f"Installing: {command}")
                         subprocess.run(command.split(), check=True)
-        except Exception as e:
-            print(f"Error installing from history: {e}")
+                    except Exception as e:
+                        print(f"Error installing from history: {e}")
     else:
         print("No install history file found.")
 
@@ -122,9 +122,8 @@ def main():
                                help="Directory to store virtual environments (overrides env var)")
 
     args = parser.parse_args()
-    venv_dir = args.venv_dir
     if args.command == "create_venv":
-        create_venv(venv_dir)
+        create_venv(args.venv_dir)
     elif args.command == "install":
         project_root = find_project_root()
         if not project_root:
@@ -148,10 +147,10 @@ def main():
         subprocess.run(["pip3"] + args.pip_args, check=True)
 
     elif args.command == "install_previous":
-        install_previous(venv_dir)
+        install_previous(args.venv_dir)
 
     elif args.command == "remove_unused":
-        remove_unused_venvs(venv_dir)
+        remove_unused_venvs(args.venv_dir)
     else:
         parser.print_help()
 
