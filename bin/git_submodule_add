@@ -1,0 +1,9 @@
+#! /bin/bash
+
+if [[ $# -ne 2 ]] ; then
+    echo "need one parameter: the repo name"
+    exit 1
+fi
+
+git submodule add "git@github.com/:LiuTaowen-Tony/$1.git" $1
+
