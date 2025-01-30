@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export PATH="$HOME/dotfiles/bin:$PATH"
-source "$HOME/dotfiles/export_build"
+source "$HOME/dotfiles/bin/export_build"
 current_shell=$(ps -p $$ -ocomm=)
 
 export MAKE='make -j16'
