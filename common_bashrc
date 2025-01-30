@@ -1,10 +1,9 @@
 #!/bin/bash
 
 export PATH="$HOME/dotfiles/bin:$PATH"
-
 source "$HOME/dotfiles/export_build"
-
 current_shell=$(ps -p $$ -ocomm=)
+
 export MAKE='make -j16'
 
 git_info() {

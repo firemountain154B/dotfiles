@@ -6,5 +6,5 @@ touch $CHECK_OUTPUT
 cat $CHECK_OUTPUT
 cat /dev/null > $CHECK_OUTPUT
 
-(check_update $HOME/dotfiles >> $CHECK_OUTPUT ; sync_dotfiles d >> $CHECK_OUTPUT) &
-
+(update_dotfiles $HOME/dotfiles >> $CHECK_OUTPUT ; deploy_dotfiles >> $CHECK_OUTPUT) &
+download_env

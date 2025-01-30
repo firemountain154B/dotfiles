@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-GPU_CHECK_SCRIPT="is_gpus_free"
+GPU_CHECK_SCRIPT="check_gpu_free"
 
 # GPU ID to monitor
 if [ $# -eq 1 ]; then
