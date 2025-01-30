@@ -27,7 +27,10 @@ if __name__ == "__main__":
     dotfiles_spacevim = os.path.expanduser("~/dotfiles/space_vim_config")
 
     if os.path.exists(spacevim_path):
-        shutil.rmtree(spacevim_path)
+        if os.path.islink(spacevim_path):
+            os.remove(spacevim_path)
+        else:
+            shutil.rmtree(spacevim_path)
         os.symlink(dotfiles_spacevim, spacevim_path)
     elif os.path.exists(vimrc_path):
         os.remove(vimrc_path)
