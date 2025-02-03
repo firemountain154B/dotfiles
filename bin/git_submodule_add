@@ -5,5 +5,10 @@ if [[ $# -ne 1 ]] ; then
     exit 1
 fi
 
-git submodule add "git@github.com:LiuTaowen-Tony/$1.git" $1
+
+if [[ $1 == *"/"* ]] ; then
+	git submodule add $1
+else
+	git submodule add "git@github.com:LiuTaowen-Tony/${1}.git"
+fi
 

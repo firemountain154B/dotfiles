@@ -25,15 +25,15 @@ def find_project_root():
     return None
 
 
-def create_venv(venv_dir):
+def create_venv(venvs_dir):
     cur_dir = os.getcwd()
     base_name = os.path.basename(cur_dir)
     random_name = ''.join(random.choices('abcdefghijklmnopqrstuvwxyz', k=8))
     name = f"{random_name}-{base_name}"
 
-    actual_venv_dir = os.path.join(venv_dir, name, base_name)
+    actual_venv_dir = os.path.join(venvs_dir, name, base_name)
     os.makedirs(actual_venv_dir, exist_ok=True)
-    link_back = os.path.join(venv_dir, name, "link_back.txt")
+    link_back = os.path.join(venvs_dir, name, "link_back.txt")
     with open(link_back, "w") as f:
         f.write(cur_dir + "\n")
 
@@ -42,9 +42,9 @@ def create_venv(venv_dir):
     return actual_venv_dir
 
 
-def remove_unused_venvs(venv_dir):
-    for item in os.listdir(venv_dir):
-        item_path = os.path.join(venv_dir, item)
+def remove_unused_venvs(venvs_dir):
+    for item in os.listdir(venvs_dir):
+        item_path = os.path.join(venvs_dir, item)
         if os.path.isdir(item_path):
             link_back_path = os.path.join(item_path, "link_back.txt")
             if os.path.exists(link_back_path):
@@ -65,7 +65,7 @@ def remove_unused_venvs(venv_dir):
                         shutil.rmtree(item_path)
 
 
-def install_previous(venv_dir):
+def install_previous():
     project_root = find_project_root()
     if not project_root:
         print("Could not find project root. Cannot install previous packages.")
@@ -85,74 +85,72 @@ def install_previous(venv_dir):
     else:
         print("No install history file found.")
 
+def parse_venv_dir_argument(args):
+    if len(args) > 2 and args[2] == "--venv-dir":
+        if len(args) < 4:
+            print("--venv-dir requires a directory argument")
+            sys.exit(1)
+        return args[3]
+    return None
+
+def install(pip_args):
+    project_root = find_project_root()
+    if not project_root:
+        print( "Not in a virtual environment or project root not found. Forwarding to system pip...")
+        subprocess.run(["pip3", "install"] + pip_args, check=True)
+        return
+
+    history_file = os.path.join(project_root, "pip_install_history.sh")
+    if not os.path.exists(history_file):
+        with open(history_file, "w") as f:
+            print(f"Created pip install history file at {history_file}")
+        os.chmod(history_file, 0o755)  # Make executable
+
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open(history_file, "a") as f:
+        f.write(f"pip3 install {' '.join(pip_args)} # {timestamp}\n")
+
+    print(f"Installation command logged: {' '.join(pip_args)}")
+
+    subprocess.run(["pip3", "install"] + pip_args, check=True)
+
+
+def print_usage():
+    print("Usage: python script_name.py <command> [args...]")
+    print("Available commands:")
+    print("  create_venv [--venv-dir <dir>]")
+    print("  install [--venv-dir <dir>] <package1> <package2> ...")
+    print("  install_previous")
+    print("  remove_unused [--venv-dir <dir>]")
 
 def main():
     venv_dir_env = os.environ.get("VIRTUAL_ENV_DIR")
-    default_venv_dir = venv_dir_env if venv_dir_env else os.path.expanduser(
-        "~/venvs")
+    default_venvs_dir = venv_dir_env if venv_dir_env else os.path.expanduser("~/venvs")
 
-    parser = argparse.ArgumentParser(
-        description="Enhanced pip manager with venv management and history.")
-    subparsers = parser.add_subparsers(dest="command", help="Sub-commands")
+    if len(sys.argv) < 2:
+        print_usage()
+        sys.exit(1)
 
-    # create_venv subcommand
-
-    create_parser = subparsers.add_parser(
-        "create_venv", help="Create a new virtual environment")
-
-    create_parser.add_argument("--venv-dir", default=default_venv_dir,
-                               help="Directory to store virtual environments (overrides env var)")
-
-    # install subcommand
-
-    install_parser = subparsers.add_parser("install", help="Install packages")
-    install_parser.add_argument(
-        "pip_args", nargs=argparse.REMAINDER, help="Arguments to pass to pip")
-
-    # install_previous subcommand
-    install_previous_parser = subparsers.add_parser(
-        "install_previous", help="Install previously installed packages from history")
-    install_previous_parser.add_argument(
-        "--venv-dir", default=default_venv_dir, help="Directory to store virtual environments (overrides env var)")
-
-    # remove_unused subcommand
-    remove_parser = subparsers.add_parser(
-        "remove_unused", help="Remove unused virtual environments")
-    remove_parser.add_argument("--venv-dir", default=default_venv_dir,
-                               help="Directory to store virtual environments (overrides env var)")
-
-    args = parser.parse_args()
-    if args.command == "create_venv":
-        create_venv(args.venv_dir)
-    elif args.command == "install":
-        project_root = find_project_root()
-        if not project_root:
-            print(
-                "Not in a virtual environment or project root not found. Forwarding to system pip...")
-            subprocess.run(["pip3"] + args.pip_args, check=True)
-            return
-
-        history_file = os.path.join(project_root, "pip_install_history.sh")
-        if not os.path.exists(history_file):
-            with open(history_file, "w") as f:
-                print(f"Created pip install history file at {history_file}")
-            os.chmod(history_file, 0o755)  # Make executable
-
-        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        with open(history_file, "a") as f:
-            f.write(f"pip3 {' '.join(args.pip_args)} # {timestamp}\n")
-
-        print(f"Installation command logged: {' '.join(args.pip_args)}")
-
-        subprocess.run(["pip3"] + args.pip_args, check=True)
-
-    elif args.command == "install_previous":
-        install_previous(args.venv_dir)
-
-    elif args.command == "remove_unused":
-        remove_unused_venvs(args.venv_dir)
+    command = sys.argv[1]
+    if command == "create_venv":
+        venvs_dir = parse_venv_dir_argument(sys.argv) or default_venvs_dir
+        create_venv(venvs_dir) 
+        remove_unused_venvs(venvs_dir)
+    elif command == "install":
+        if len(sys.argv) < 3:
+            print("Usage: python script_name.py install <package1> <package2> ...")
+            sys.exit(1)
+        pip_args = sys.argv[2:] 
+        install(pip_args) 
+    elif command == "install_previous":
+        install_previous()
+    elif command == "remove_unused":
+        venvs_dir = parse_venv_dir_argument(sys.argv) or default_venvs_dir
+        remove_unused_venvs(venvs_dir) 
     else:
-        parser.print_help()
+        print(f"Unknown command: {command}")
+        print_usage()
+        sys.exit(1)    
 
 
 if __name__ == "__main__":
