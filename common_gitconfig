@@ -3,6 +3,8 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+[submodule]
+    recurse = true
 [user]
 	name = LiuTaowen Tony
 	email = tony_t_liu@outlook.com

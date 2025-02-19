@@ -110,8 +110,9 @@ command: {natural_language_input}
                 {"role": "assistant", "content": self.bash_script}
             )
         else:
-            print(f"Error: {response.status} - {response_json}")
+            print(f"Error: {response.status} ")
             self.bash_script = "An error occurred during translation."
+            exit(-1)
 
         self.translation_done = True
         return self.bash_script

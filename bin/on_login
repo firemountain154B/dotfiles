@@ -7,4 +7,3 @@ cat $CHECK_OUTPUT
 cat /dev/null > $CHECK_OUTPUT
 
 (update_dotfiles $HOME/dotfiles >> $CHECK_OUTPUT ; deploy_dotfiles >> $CHECK_OUTPUT) &
-download_env
