@@ -33,8 +33,5 @@ alias localip="ipconfig getifaddr en0"
 
 # Show active network interfaces
 alias ghist="history | grep"
-alias pyenva="source .venv/bin/activate"
 alias vim='vim "+set mouse="'
-alias pip3='hijack_pip'
-alias pip='hijack_pip'
 

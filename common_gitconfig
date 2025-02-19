@@ -9,17 +9,16 @@
 [core]
 	autocrlf = input
 [alias]
-     ini = !git init && git_gitignore
-     suba = !git_submodule_add 
-     cl = !${HOME}/dotfiles/bin/git_clone
-     st = status -s
-     se = !git rev-list --all | xargs git grep -F
-     cm = commit -m
-     acm = !git add . && git commit -m
-     acp = !git add . && git commit -m "update" && git push
-     diffs = diff --staged
-     lg1 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
-     lg = log --abbrev-commit --stat
+  ini = !git init && git_gitignore
+  sub = submodule
+  st = status -s
+  se = !git rev-list --all | xargs git grep -F
+  cm = commit -m
+  acm = !git add . && git commit -m
+  acp = !git add . && git commit -m "update" && git push
+  diffs = diff --staged
+  lg1 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+  lg = log --abbrev-commit --stat
 	last = log -1 HEAD --stat
 	rv = remote -v
 [help]
