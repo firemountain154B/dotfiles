@@ -5,13 +5,12 @@
 	required = true
 [submodule]
     recurse = true
-[user]
-	name = LiuTaowen Tony
-	email = tony_t_liu@outlook.com
 [core]
 	autocrlf = input
 [alias]
   ini = !git init && git_gitignore
+  ignore = ! git_gitignore
+  expand = ! git_expand
   sub = submodule
   st = status -s
   se = !git rev-list --all | xargs git grep -F
