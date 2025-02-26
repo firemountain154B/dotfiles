@@ -8,8 +8,7 @@ cat /dev/null > $CHECK_OUTPUT
 
 update () {
   cd "$HOME/dotfiles"
-  git fetch > /dev/null
-  if [ "$(git status -s)" = "" ] ; then 
+  if [ -z $(git fetch) ] ; then 
     echo "dotfiles is updated ✅"
   elif git merge origin/master > /dev/null ; then
     echo "dotfiles has update ❗️"
