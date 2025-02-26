@@ -6,4 +6,18 @@ touch $CHECK_OUTPUT
 cat $CHECK_OUTPUT
 cat /dev/null > $CHECK_OUTPUT
 
-(update_dotfiles $HOME/dotfiles >> $CHECK_OUTPUT ; deploy_dotfiles >> $CHECK_OUTPUT) &
+update () {
+  cd "$HOME/dotfiles"
+  git fetch > /dev/null
+  if [ "$(git status -s)" = "" ] ; then 
+    echo "dotfiles is updated ✅"
+  elif git merge origin/master > /dev/null ; then
+    echo "$TARGET_DIR has update ❗️"
+    git st -s
+  else
+    echo "$TARGET_DIR merge conflict detected. Please merge the changes manually. ❌"
+    git merge --abort > /dev/null
+  fi
+}
+
+(update >> $CHECK_OUTPUT ; deploy_dotfiles >> $CHECK_OUTPUT) &
