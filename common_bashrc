@@ -36,7 +36,7 @@ elif [[ $current_shell == *"zsh"* ]] ; then # ZSH SPECIFIC
   autoload -Uz compinit && compinit 
   precmd() {
     # Determine if the last command succeeded or failed
-    if [ $? -ne 0 ]; then arrow="%F{red}!$?" else arrow="%F{green}→" fi
+    if [ $? -ne 0 ]; then arrow="%F{red}!$?" ; else arrow="%F{green}→" ; fi
     PROMPT="${arrow} %F{green}%m %F{blue}%B%~%b%f$(git_info) "
   }
 fi
