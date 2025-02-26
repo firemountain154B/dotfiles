@@ -12,7 +12,7 @@ update () {
   if [ "$(git status -s)" = "" ] ; then 
     echo "dotfiles is updated ✅"
   elif git merge origin/master > /dev/null ; then
-    echo "$TARGET_DIR has update ❗️"
+    echo "dotfiles has update ❗️"
     git st -s
   else
     echo "$TARGET_DIR merge conflict detected. Please merge the changes manually. ❌"

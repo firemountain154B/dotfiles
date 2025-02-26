@@ -19,7 +19,7 @@ git_info() {
 ############################## SHELL SPECIFIC ##############################
 current_shell=$(ps -p $$ -ocomm=)
 if [[ $current_shell == *"bash"* ]] ; then # BASH SPECIFIC
-  PS1='$(if [ $? -ne 0 ]; then echo -e "\[\033[31m\]→"; else echo -e "\[\033[32m\]!$?"; fi)\[\033[0m\] \[\033[32m\]\h \[\033[1;34m\]\W\[\033[0m\]$(git_info) '
+  PS1='$(if [ $? -ne 0 ]; then echo -e "\[\033[31m\]→"; else echo -e "\[\033[32m\]→"; fi)\[\033[0m\] \[\033[32m\]\h \[\033[1;34m\]\W\[\033[0m\]$(git_info) '
 elif [[ $current_shell == *"zsh"* ]] ; then # ZSH SPECIFIC
   setopt CORRECT
   setopt CORRECT_ALL
