@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ $# -le 1 ]; then
+  echo "usage: pyrun <dir-to-script> <...command line arguments>"
+  exit 1
+fi
+
+INPUT=$(echo $1 | tr '/' '.')
+DOT_PY_REMOVED=${INPUT/%.py}
+shift
+
+command python3 -m $DOT_PY_REMOVED $@
+
