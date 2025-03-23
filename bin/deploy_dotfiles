@@ -1,7 +1,7 @@
 #/bin/bash
 
-ensure_content_exist '~/dotfiles/common_gitconfig' \
-                     '[include]\n\tpath = ~/dotfiles/common_gitconfig' \
+ensure_content_exist '~/dotfiles/gitconfig' \
+                     '[include]\n\tpath = ~/dotfiles/gitconfig' \
                      $HOME/.gitconfig
 
 ensure_content_exist "set -g mouse off" $HOME/.tmux.conf

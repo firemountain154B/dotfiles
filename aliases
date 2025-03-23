@@ -34,5 +34,14 @@ alias localip="ipconfig getifaddr en0"
 # Show active network interfaces
 alias ghist="history | grep"
 alias vim='vim "+set mouse="'
-alias source_bash='source ~/.bashrc'
+alias reload="exec ${SHELL} -l"
+alias path='echo -e ${PATH//:/\\n}'
+
+alias GET='lwp-request -m GET'
+alias HEAD='lwp-request -m HEAD'
+alias POST='lwp-request -m POST'
+alias PUT='lwp-request -m PUT'
+alias DELTE='lwp-request -m DELETE'
+alias TRACE='lwp-request -m TRACE'
+alias OPTIONS='lwp-request -m OPTIONS'
 

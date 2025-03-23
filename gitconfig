@@ -25,5 +25,11 @@
   lg = log --abbrev-commit --stat
 	last = log -1 HEAD --stat
 	rv = remote -v
+  amend = commit --amend --reuse-message=HEAD
+  author = "!f() { git commit --amend --author \"$1 <$2>\" -C HEAD; }; f"
+  whoami = config user.email
+[apply]
+	# Detect whitespace e
+	whitespace = fix
 [help]
 	autocorrect = 20

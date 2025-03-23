@@ -33,7 +33,7 @@ fi
 FILE_CONTENT="$(< "$FILE_PATH")"
 
 {
-    echo "$CONTENT"
+    printf "$CONTENT"
     echo
     echo "$FILE_CONTENT"
 } > "$FILE_PATH"
