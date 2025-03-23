@@ -11,11 +11,9 @@ ensure_zsh () {
   cd $DOT_ZSH
   if ! [ -e $DOT_ZSH/zsh-syntax-highlighting ] ; then 
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
-    echo "source $DOT_ZSH/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> $HOME/.zshrc
   fi
   if ! [ -e $DOT_ZSH/zsh-autosuggestions ] ; then 
     git clone https://github.com/zsh-users/zsh-autosuggestions.git
-    echo "source $DOT_ZSH/zsh-autosuggestions/zsh-autosuggestions.zsh" >> $HOME/.zshrc
   fi
 }
 
@@ -23,13 +21,19 @@ ensure_x_cmd () {
   eval "$(curl https://get.x-cmd.com)"
 }
 
-if [ $1 = spacevim ] ; then
-  ensure_spacevim
-elif [ $1 = zsh ] ; then
+if [ $# != 1 ] ; then
+  echo "usage: ensure [spacevim|zsh|x_cmd]"
+  exit 1
+fi
+
+if [ $1 = zsh ] ; then
   ensure_zsh
 elif [ $1 = x_cmd ] ; then
   ensure_x_cmd
+elif [ $1 = spacevim ] ; then
+  ensure_spacevim
 else
   echo "usage: ensure [spacevim|zsh|x_cmd]"
+  exit 1
 fi
 

@@ -19,7 +19,13 @@ git_info() {
 ############################## SHELL SPECIFIC ##############################
 current_shell=$(ps -p $$ -ocomm=)
 if [[ $current_shell == *"bash"* ]] ; then # BASH SPECIFIC
-  PS1='$(if [ $? -ne 0 ]; then echo -e "\[\033[31m\]→"; else echo -e "\[\033[32m\]→"; fi)\[\033[0m\] \[\033[32m\]\h \[\033[1;34m\]\W\[\033[0m\]$(git_info) '
+  error_code () {
+    ERROR_CODE=$?
+    if [[ $ERROR_CODE = 0 ]] ; then echo -en "\033[32m→" else echo -en "\033[31m!${ERROR_CODE}" fi
+  }
+  [[ $PS1 && -f /usr/share/bash-completion/bash_completion ]] && \
+    source usr/share/bash-completion/bash_completion
+  PS1='$(error_code)\[\033[0m\] \[\033[32m\]\h \[\033[1;34m\]\W\[\033[0m\]$(git_info) '
 elif [[ $current_shell == *"zsh"* ]] ; then # ZSH SPECIFIC
   setopt CORRECT
   setopt CORRECT_ALL
@@ -34,9 +40,13 @@ elif [[ $current_shell == *"zsh"* ]] ; then # ZSH SPECIFIC
   HISTSIZE=2000
   SAVEHIST=5000
   autoload -Uz compinit && compinit 
+  ensure zsh
+  if [ -f $HOME/.zsh/zsh-autosuggestions ] ; then source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh fi;
+  if [ -f $HOME/.zsh/zsh-syntax-highlighting ] ; then source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh fi;
   precmd() {
     # Determine if the last command succeeded or failed
-    if [ $? -ne 0 ]; then arrow="%F{red}!$?" ; else arrow="%F{green}→" ; fi
+    ERROR_CODE=$?
+    if [ $ERROR_CODE -ne 0 ]; then arrow="%F{red}!${ERROR_CODE}" ; else arrow="%F{green}→" ; fi
     PROMPT="${arrow} %F{green}%m %F{blue}%B%~%b%f$(git_info) "
   }
 fi

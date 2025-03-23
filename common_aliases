@@ -34,4 +34,5 @@ alias localip="ipconfig getifaddr en0"
 # Show active network interfaces
 alias ghist="history | grep"
 alias vim='vim "+set mouse="'
+alias source_bash='source ~/.bashrc'
 
