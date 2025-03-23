@@ -8,14 +8,15 @@ cat /dev/null > $CHECK_OUTPUT
 
 update () {
   cd "$HOME/dotfiles"
-  if [ -z $(git fetch) ] ; then 
+  PULL_MESSAGE=$(git pull)
+  if [[ $PULL_MESSAGE = *Already* ]] ; then 
     echo "dotfiles is updated ✅"
-  elif git merge origin/master > /dev/null ; then
-    echo "dotfiles has update ❗️"
-    git st -s
-  else
+  elif [[ $PULL_MESSAGE = *conflict* ]] ; then
     echo "$TARGET_DIR merge conflict detected. Please merge the changes manually. ❌"
     git merge --abort > /dev/null
+  else
+    echo "dotfiles has update ❗️"
+    git st -s
   fi
 }
 
