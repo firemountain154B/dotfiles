@@ -44,4 +44,4 @@ alias PUT='lwp-request -m PUT'
 alias DELTE='lwp-request -m DELETE'
 alias TRACE='lwp-request -m TRACE'
 alias OPTIONS='lwp-request -m OPTIONS'
-
+alias diff='code --diff'

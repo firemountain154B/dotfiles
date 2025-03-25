@@ -2,7 +2,6 @@
 
 export PATH="$HOME/dotfiles/bin:$PATH"
 source "$HOME/dotfiles/bin/export_build"
-source $HOME/dotfiles/aliases
 
 # only do following when interactive
 
@@ -98,7 +97,7 @@ if [ -n "$ncolors" ] && [ $ncolors -ge 8 ]; then
   alias json='jq .'
   alias dir='dir --color=auto'
 fi
-
+source $HOME/dotfiles/aliases
 
 ##############################  AUTO UPDATE  ##############################
 CHECK_OUTPUT="$HOME/.check_update_output.txt"
