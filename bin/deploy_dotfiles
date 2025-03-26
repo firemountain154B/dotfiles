@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 ensure_content_exist '~/dotfiles/gitconfig' \
                      '[include]\n\tpath = ~/dotfiles/gitconfig' \
