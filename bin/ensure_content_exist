@@ -21,7 +21,7 @@ FILE_PATH="${FILE_PATH/#\~/$HOME}"
 
 if [[ ! -f "$FILE_PATH" ]]; then
     echo "File '$FILE_PATH' does not exist. Create $FILE_PATH"
-    echo "$CONTENT" > "$FILE_PATH"
+    printf "$CONTENT" > "$FILE_PATH"
     exit 0
 fi
 
