@@ -54,7 +54,7 @@ if [[ $current_shell == *"bash"* ]] ; then # BASH SPECIFIC
           source "$HOME/.local/share/bash-completion/bash_completion"
       fi
   fi
-  PS1='$(error_code)\[\033[0m\] \[\033[32m\]\h \[\033[1;34m\]\W\[\033[0m\]$(git_info) '
+  PS1='\[\033[32m→\]\[\033[0m\] \[\033[32m\]\h \[\033[1;34m\]\W\[\033[0m\]$(git_info) '
 elif [[ $current_shell == *"zsh"* ]] ; then # ZSH SPECIFIC
   setopt CORRECT
   setopt CORRECT_ALL
@@ -70,8 +70,8 @@ elif [[ $current_shell == *"zsh"* ]] ; then # ZSH SPECIFIC
   SAVEHIST=5000
   autoload -Uz compinit && compinit 
   ensure zsh
-  if [ -f $HOME/.zsh/zsh-autosuggestions ] ; then source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh ; fi
-  if [ -f $HOME/.zsh/zsh-syntax-highlighting ] ; then source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ; fi
+  if [ -d $HOME/.zsh/zsh-autosuggestions ] ; then source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh ; fi
+  if [ -d $HOME/.zsh/zsh-syntax-highlighting ] ; then source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ; fi
   precmd() {
     # Determine if the last command succeeded or failed
     local ERROR_CODE=$?

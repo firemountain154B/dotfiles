@@ -5,6 +5,28 @@ ensure_spacevim () {
   curl -sLf https://spacevim.org/install.sh | bash
 }
 
+ensure_asdf () {
+  UNAME=$(uname -a)
+  echo $UNAME
+  OS=linux
+  if [[ $UNAME = *Darwin* ]] ; then 
+    OS=darwin
+  fi
+  ARCH=amd64
+  if [[ $UNAME = *arm* ]] ; then
+    ARCH=arm64
+  fi
+
+  VERSION=$(fetch_github_release asdf-vm asdf | head -n 1 | cut -d / -f 8)
+  LINK="https://github.com/asdf-vm/asdf/releases/download/${VERSION}/asdf-${VERSION}-${OS}-${ARCH}.tar.gz"
+  mkdir -p $HOME/build/asdf/bin
+  cd $HOME/build/asdf/bin
+  echo $LINK
+  curl -LO "$LINK"
+  tar -xvf "asdf-${VERSION}-${OS}-${ARCH}.tar.gz"
+  rm -f "asdf-${VERSION}-${OS}-${ARCH}.tar.gz"
+}
+
 ensure_zsh () {
   DOT_ZSH=$HOME/.zsh
   mkdir -p $DOT_ZSH
@@ -26,14 +48,6 @@ if [ $# != 1 ] ; then
   exit 1
 fi
 
-if [ $1 = zsh ] ; then
-  ensure_zsh
-elif [ $1 = x_cmd ] ; then
-  ensure_x_cmd
-elif [ $1 = spacevim ] ; then
-  ensure_spacevim
-else
-  echo "usage: ensure [spacevim|zsh|x_cmd]"
-  exit 1
-fi
+ensure_$1
+exit 0
 
