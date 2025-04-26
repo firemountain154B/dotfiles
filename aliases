@@ -36,7 +36,6 @@ alias ghist="history | grep"
 alias vim='vim "+set mouse="'
 alias reload="exec ${SHELL} -l"
 alias path='echo -e ${PATH//:/\\n}'
-alias diff='code --diff'
 
 alias GET='lwp-request -m GET'
 alias HEAD='lwp-request -m HEAD'
