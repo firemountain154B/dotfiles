@@ -3,7 +3,6 @@
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
-alias rm='rm -i'
 
 # List directory contents
 alias la='ls -a'
@@ -49,3 +48,6 @@ alias gpu0='CUDA_VISIBLE_DEVICES=0'
 alias gpu1='CUDA_VISIBLE_DEVICES=1'
 alias gpu2='CUDA_VISIBLE_DEVICES=2'
 alias gpu3='CUDA_VISIBLE_DEVICES=3'
+
+alias sact='source .venv/bin/activate'
+
