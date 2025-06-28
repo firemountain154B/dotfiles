@@ -9,6 +9,18 @@ if [[ $- == *i* ]] ; then
 
 export MAKE='make -j16'
 
+function proxy_on() {
+    export http_proxy=http://127.0.0.1:7890
+    export https_proxy=\$http_proxy
+    echo -e "enabled terminal proxy"
+}
+
+function proxy_off(){
+    unset http_proxy https_proxy
+    echo -e "disabled terminal proxy"
+}
+
+
 git_info() {
     branch=$(git branch 2>/dev/null | grep '*' | sed 's/* //')
     if [ -n "$branch" ] ; then
