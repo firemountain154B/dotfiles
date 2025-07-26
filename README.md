@@ -11,13 +11,6 @@ A comprehensive dotfiles configuration for macOS that provides a streamlined dev
 - **Auto-completion**: Intelligent tab completion and suggestions
 - **Auto-updates**: Automatically pulls latest dotfiles updates in background
 
-### 🍎 macOS Optimizations
-- **System preferences**: Comprehensive macOS tweaks for better UX
-- **Finder enhancements**: Show hidden files, path bar, status bar
-- **Dock optimizations**: Auto-hide, better animations, reduced clutter
-- **Keyboard improvements**: Faster key repeat, disabled autocorrect for coding
-- **Performance tweaks**: Optimized scrollbars, animations, and system behavior
-
 ### 🛠 Development Tools
 - **Git configuration**: Useful aliases, LFS support, and smart defaults
 - **Vim setup**: Feature-rich vim configuration with SpaceVim support
@@ -29,6 +22,13 @@ A comprehensive dotfiles configuration for macOS that provides a streamlined dev
 - **Package management**: Auto-installation of development tools (asdf, zsh plugins)
 - **AI assistant**: Built-in natural language to bash command translator
 - **Build tools**: Deployment and export utilities
+
+### 🍎 macOS Optimizations
+- **System preferences**: Comprehensive macOS tweaks for better UX
+- **Finder enhancements**: Show hidden files, path bar, status bar
+- **Dock optimizations**: Auto-hide, better animations, reduced clutter
+- **Keyboard improvements**: Faster key repeat, disabled autocorrect for coding
+- **Performance tweaks**: Optimized scrollbars, animations, and system behavior
 
 ## 🚀 Quick Start
 
@@ -52,12 +52,7 @@ A comprehensive dotfiles configuration for macOS that provides a streamlined dev
    nano ~/dotfiles/gitconfig
    ```
 
-4. **Deploy dotfiles:**
-   ```bash
-   ~/dotfiles/bin/deploy_dotfiles
-   ```
-
-5. **Apply macOS settings (optional):**
+4. **Apply macOS settings (optional):**
    ```bash
    ./macos
    ```
@@ -68,7 +63,7 @@ The dotfiles will automatically:
 - Set up git configuration
 - Deploy vim/SpaceVim configuration
 - Install zsh plugins if using zsh
-- Check for updates in the background
+- **Check for updates in the background**
 
 ## 📂 Structure
 
@@ -153,7 +148,9 @@ Translates natural language to bash commands using AI:
 this is aliased to rm
 ```bash
 trash file.txt        # Move to ~/.Trash instead of permanent deletion
-trash *.log          # Move multiple files safely
+trash *.log           # Move multiple files safely
+rm file.txt           # rm is aliased to trash, so it will move thing to trash
+/bin/rm file.txt      # use the system /bin/rm explicitly to actually remove
 ```
 
 ## ⚙️ Configuration
