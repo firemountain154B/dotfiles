@@ -119,7 +119,7 @@ set cmdheight=2
 set expandtab
 
 " Display line numbers on the left
-set nu rnu 
+set nu  
 
 " Quickly time out on keycodes, but never time out on mappings
 set notimeout ttimeout ttimeoutlen=200

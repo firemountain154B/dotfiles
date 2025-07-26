@@ -124,9 +124,9 @@ update() {
   fi
 }
 
-set +m
-update >> "$CHECK_OUTPUT" & disown
-deploy_dotfiles & disown
-set -m
+# set +m
+# update >> "$CHECK_OUTPUT" & disown
+# deploy_dotfiles & disown
+# set -m
 
 fi #  interative

@@ -1,13 +1,5 @@
 #!/bin/bash
 
-# spacevim
-ensure_spacevim () {
-  if [ -f "$HOME/.SpaceVim.d" ]; then
-    return
-  fi
-  curl -sLf https://spacevim.org/install.sh | bash
-}
-
 ensure_asdf () {
   if command -v asdf > /dev/null 2>&1; then
     return
