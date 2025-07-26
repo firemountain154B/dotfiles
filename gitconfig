@@ -1,6 +1,6 @@
 [user]
   name = Cano
-  email = firemoutain000@gmail.com
+  email = cx922@ic.ac.uk
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
